@@ -1,0 +1,52 @@
+[
+    {
+        "score": 3,
+        "trigger": { "blue": 4, "green": 4 },
+        "art": "noble1"
+    },
+    {
+        "score": 3,
+        "trigger": { "black": 4, "red": 4 },
+        "art": "noble2"
+    },
+    {
+        "score": 3,
+        "trigger": { "green": 3, "blue": 3, "red": 3 },
+        "art": "noble3"
+    },
+    {
+        "score": 3,
+        "trigger": { "black": 3, "red": 3, "white": 3 },
+        "art": "noble4"
+    },
+    {
+        "score": 3,
+        "trigger": { "black": 3, "red": 3, "green": 3 },
+        "art": "noble5"
+    },
+    {
+        "score": 3,
+        "trigger": { "blue": 4, "white": 4 },
+        "art": "noble6"
+    },
+    {
+        "score": 3,
+        "trigger": { "red": 4, "green": 4 },
+        "art": "noble7"
+    },
+    {
+        "score": 3,
+        "trigger": { "green": 3, "blue": 3, "white": 3 },
+        "art": "noble8"
+    },
+    {
+        "score": 3,
+        "trigger": { "black": 3, "blue": 3, "white": 3 },
+        "art": "noble9"
+    },
+    {
+        "score": 3,
+        "trigger": { "black": 4, "white": 4 },
+        "art": "noble10"
+    }
+]
