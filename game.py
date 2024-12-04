@@ -50,12 +50,8 @@ class CardLoader:
         }
 
         # Shuffle the cards
-        # cards_shuffled = {
-        #     tier: random.sample(cards, len(cards))
-        #     for tier, cards in cards_ids.items()
-        # }
         cards_shuffled = {
-            tier: cards
+            tier: random.sample(cards, len(cards))
             for tier, cards in cards_ids.items()
         }
 
