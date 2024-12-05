@@ -67,6 +67,12 @@ class CardLoader:
         return cards_glossary, cards_drawn
 
 class CollectionsLoader:
+    '''
+    A static class for loading the collections from a JSON file.
+    
+    Not gonna lie, I'm don't think I should have made this a class, but
+    whatever.
+    '''
     @staticmethod
     def load_collections(collections_file: str, num_collections: int = 5) -> tuple[list[dict], list[int]]:
         '''
@@ -84,8 +90,22 @@ class CollectionsLoader:
         with open(collections_file, 'r') as f:
             collections_raw = json.load(f)
             
-        return collections_raw, random.sample(range(len(collections_raw)), num_collections)
+        # Draw collections at random to be at play
+        collections_at_play = random.sample(range(len(collections_raw)), num_collections)
+        
+        return collections_raw, collections_at_play
 
+class WinException(Exception):
+    '''
+    An exception to be raised when a player wins the game.
+    '''
+    pass
+
+class ActionInvalidException(Exception):
+    '''
+    An exception to be raised when an action is invalid.
+    '''
+    pass
 
 class Game:
     '''
@@ -113,7 +133,20 @@ class Game:
     def __init__(self):
         self.players = {}
         self.began = False
-        
+    
+    def _ensure_game_began(func):
+        '''
+        A decorator that ensures the method is only called after the game has
+        begun.
+        '''
+        def wrapper(self, *args, **kwargs):
+            if not self.began:
+                raise ActionInvalidException("Game has not begun")
+            
+            return func(self, *args, **kwargs)
+        return wrapper
+    
+    @_ensure_game_began
     def _find_tier_of_card(self, card_id: int) -> int:
         '''
         Find the tier of a card.
@@ -124,14 +157,12 @@ class Game:
         Returns:
             int: The tier of the card.
         '''
-        if not self.began:
-            raise Exception("Game has not been initialized")
-        
         if card_id not in self.cards:
-            raise Exception(f"Card {card_id} does not exist")
+            raise ActionInvalidException(f"Card {card_id} does not exist")
         
         return self.cards[card_id]['tier']
     
+    @_ensure_game_began
     def _get_player_discount(self, player_id: str, color: str) -> dict[str, int]:
         '''
         Get the discounts of a player for a given color.
@@ -150,15 +181,18 @@ class Game:
         return len([card_id for card_id in player["developments"] 
                     if self.cards[card_id]["discount"] == color])
 
+    @_ensure_game_began
     def _get_player_score(self, player_id: str) -> int:
         '''
         Get the score of a player.
         '''
         player = self.players[player_id]
         
+        # Sum the scores of the player's developments
         score_from_developments = sum(self.cards[card_id]["score"] 
                                       for card_id in player["developments"])
         
+        # Add the score of the player's collection, if they have one
         if player["attained_collection"] is not None:
             score_from_collection = self.collections[player["attained_collection"]]["score"]
         else:
@@ -166,6 +200,7 @@ class Game:
         
         return score_from_developments + score_from_collection
     
+    @_ensure_game_began
     def _assign_collection_if_eligible(self, player_id: str) -> bool:
         '''
         Assign a collection to a player if they are eligible.
@@ -189,10 +224,14 @@ class Game:
         if player["attained_collection"] is not None:
             return False
         
-        for collection in self.collections:
+        # Look through every available collection
+        for collection_id in tuple(self.collections_in_play):
+            collection = self.collections[collection_id]
+            
+            # For every required color in the collection
             for color, count in collection["trigger"].items():
-                # If the player doesn't have the required number of cards with
-                # the discount for the collection, they are not eligible
+                # If the player doesn't have the required number of cards,
+                # they are not eligible
                 if sum(self.cards[card_id]["discount"] == color 
                        for card_id in player["developments"]) < count:
                     break
@@ -217,10 +256,10 @@ class Game:
             Game: The updated game state.
         '''
         if self.began:
-            raise Exception("Game has already begun")
+            raise ActionInvalidException("Game has already begun")
         
         if id in self.players:
-            raise Exception(f"Player {id} already exists")
+            raise ActionInvalidException(f"Player {id} already exists")
         
         # Initialize the player's wallet, developments, and reservations
         self.players[id] = {
@@ -262,21 +301,23 @@ class Game:
         A decorator for actions that can be taken by a player.
         '''
         def wrapper(self, player_id, *args, **kwargs):
+            # Ensure the game has begun
             if not self.began:
-                raise Exception("Game has not begun")
+                raise ActionInvalidException("Game has not begun")
             
             # Ensure the action is being taken by the player whose turn it is
             current_player = list(self.players.keys())[
                 self.turn % len(self.players.keys())
             ]
             if current_player != player_id:
-                raise Exception(f"Currently Player {current_player}'s turn")
+                raise ActionInvalidException(f"Currently Player {current_player}'s turn")
 
+            # Execute the action
             result = func(self, player_id, *args, **kwargs)
 
             # Check for win condition
             if self._get_player_score(player_id) >= 15:
-                raise Exception(f"Player {player_id} has won the game")
+                raise ActionInvalidException(f"Player {player_id} has won the game")
             
             # Assign a collection to the player if they are eligible
             self._assign_collection_if_eligible(player_id)
@@ -300,16 +341,19 @@ class Game:
             Game: The updated game state.
         '''
         if len(set(colors)) != 3:
-            raise Exception("Must take 3 different colors")
+            raise ActionInvalidException("Must take 3 different colors")
         
         player = self.players[player_id]
         
         if sum(player["wallet"].values()) > 7:
-            raise Exception("Cannot have more than 10 tokens at once")
+            raise ActionInvalidException("Cannot have more than 10 tokens at once")
         
         for color in colors:
             if self.bank[color] < 1:
-                raise Exception(f"Not enough {color} tokens left in the bank")
+                raise ActionInvalidException(f"Not enough {color} tokens left in the bank")
+            
+            if color == "gold":
+                raise ActionInvalidException("Cannot take gold tokens")
         
         # Add 1 token to the player's wallet and remove 1 from the bank, of
         # each chosen color
@@ -336,13 +380,16 @@ class Game:
         player = self.players[player_id]
         
         if color not in player["wallet"]:
-            raise Exception(f"Color {color} is not a valid color")
+            raise ActionInvalidException(f"Color {color} is not a valid color")
+        
+        if color == "gold":
+            raise ActionInvalidException("Cannot take gold tokens")
         
         if self.bank[color] < 4:
-            raise Exception(f"There are less than 4 {color} tokens left in the bank")
+            raise ActionInvalidException(f"There are less than 4 {color} tokens left in the bank")
         
         if sum(player["wallet"].values()) > 8:
-            raise Exception("Cannot have more than 10 tokens at once")
+            raise ActionInvalidException("Cannot have more than 10 tokens at once")
 
         # Add 2 tokens to the player's wallet and remove 2 from the bank, of
         # the chosen color
@@ -375,10 +422,10 @@ class Game:
         player = self.players[player_id]
         
         if tier not in self.decks:
-            raise Exception(f"Tier {tier} does not exist")
+            raise ActionInvalidException(f"Tier {tier} does not exist")
         
         if card_id is not None and card_id not in self.cards:
-            raise Exception(f"Card {card_id} does not exist")
+            raise ActionInvalidException(f"Card {card_id} does not exist")
         
         # If the card is specified, find its tier
         if card_id is not None:
@@ -387,20 +434,20 @@ class Game:
         # If the card is not on the table, i.e. it's not available to be
         # reserved or purchased
         if card_id is not None and card_id not in self.decks[tier]["visible"]:
-            raise Exception(f"Card {card_id} is not up for grabs")
+            raise ActionInvalidException(f"Card {card_id} is not up for grabs")
         
         if len(player["reservations"]) >= 3:
-            raise Exception("Cannot have more than 3 reserved cards at once")
+            raise ActionInvalidException("Cannot have more than 3 reserved cards at once")
         
         if sum(player["wallet"].values()) > 9:
-            raise Exception("Cannot have more than 10 tokens at once")
+            raise ActionInvalidException("Cannot have more than 10 tokens at once")
         
         # If the card is not specified, the player is choosing the topmost
         # card from the hidden deck
         if card_id is None:
             # If there are no cards left in the hidden deck, raise an error...
             if len(self.decks[tier]["hidden"]) == 0:
-                raise Exception(f"No cards left in tier {tier}")
+                raise ActionInvalidException(f"No cards left in tier {tier}")
             
             # ...otherwise, pop the top card from the hidden deck
             card_id = self.decks[tier]["hidden"].pop()
@@ -448,10 +495,10 @@ class Game:
         player = self.players[player_id]
         
         if card_id not in self.cards:
-            raise Exception(f"Card {card_id} does not exist")
+            raise ActionInvalidException(f"Card {card_id} does not exist")
         
         if player["wallet"]["gold"] < len(gold_usage):
-            raise Exception("Not enough gold tokens to use")
+            raise ActionInvalidException("Not enough gold tokens to use")
         
         # Calculate the effective price of the card, taking into account the
         # player's discounts
@@ -464,7 +511,7 @@ class Game:
         for color in gold_usage:
             # Effective price can't go below 0
             if effective_price[color] < 1:
-                raise Exception(f"Used excessive gold tokens for {color}")
+                raise ActionInvalidException(f"Used excessive gold tokens for {color}")
             
             # Discount the price of the color...
             effective_price[color] -= 1
@@ -479,7 +526,7 @@ class Game:
         # Check if player can afford the card
         for color, price in effective_price.items():
             if player["wallet"][color] < price:
-                raise Exception(f"Not enough {color} tokens to purchase card")
+                raise ActionInvalidException(f"Not enough {color} tokens to purchase card")
                 
         if card_id in player["reservations"]:
             # Transfer the card from reservations to developments
@@ -492,7 +539,7 @@ class Game:
             # Check if the card is available to be purchased
             tier = self._find_tier_of_card(card_id)
             if card_id not in self.decks[tier]["visible"]:
-                raise Exception(f"Card {card_id} is not up for grabs")
+                raise ActionInvalidException(f"Card {card_id} is not up for grabs")
             
             # Transfer the card from the visible deck to the player's
             # developments
@@ -570,3 +617,16 @@ class Game:
 
     def __repr__(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+
+
+
+from pprint import pprint
+pprint(
+    Game()
+        .add_player("1")
+        .add_player("2")
+        .begin("./core/cards.json", "./core/collections.json")
+        .action_take_different("1", ("black", "white", "red"))
+        .action_take_same("2", "black")
+        .get_visible_state()
+)
