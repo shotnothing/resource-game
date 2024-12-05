@@ -1,6 +1,7 @@
 import json
 from itertools import groupby
 import random
+import copy
 
 class CardLoader:
     '''
@@ -261,6 +262,9 @@ class Game:
         if id in self.players:
             raise ActionInvalidException(f"Player {id} already exists")
         
+        if len(self.players) >= 4:
+            raise ActionInvalidException("Cannot have more than 4 players")
+        
         # Initialize the player's wallet, developments, and reservations
         self.players[id] = {
             "wallet": { "black": 0, "white": 0, "red": 0, "blue": 0, "green": 0, "gold": 0 },
@@ -285,6 +289,9 @@ class Game:
         '''
         if self.began:
             return self
+        
+        if len(self.players) < 1:
+            raise ActionInvalidException("Must have at least 1 player")
         
         self.began = True
         
@@ -559,6 +566,33 @@ class Game:
             self.bank[color] += price
             
         return self
+    
+    def do_action(self, action: str, player_id: str, *args, **kwargs) -> "Game":
+        '''
+        Take an action specified by a string.
+        
+        Available actions:
+            take_different
+            take_same
+            reserve
+            purchase
+        
+        Args:
+            action (str): The action to take.
+            
+        Returns:
+            Game: The updated game state.
+        '''
+        if action == "take_different":
+            return self.action_take_different(player_id, *args, **kwargs)
+        elif action == "take_same":
+            return self.action_take_same(player_id, *args, **kwargs)
+        elif action == "reserve":
+            return self.action_reserve(player_id, *args, **kwargs)
+        elif action == "purchase":
+            return self.action_purchase(player_id, *args, **kwargs)
+        else:
+            raise ActionInvalidException(f"Unknown action: {action}")
 
     def get_visible_state(self) -> dict:
         '''
@@ -568,7 +602,10 @@ class Game:
         Returns:
             dict: A dictionary containing the visible state of the game.
         '''
-        out = self.__dict__.copy()
+        out = copy.deepcopy(self.__dict__)
+        
+        if not self.began:
+            return out
         
         # Don't show the hidden decks
         for tier in out["decks"]:
@@ -590,6 +627,10 @@ class Game:
         Returns:
             list[dict]: A list of all the cards in the game.
         '''
+        if not self.began:
+            # Should migrate to a custom exception
+            return ActionInvalidException("Game has not begun")
+        
         return list(self.cards.values())
     
     def get_collections(self) -> list[dict]:
@@ -600,6 +641,10 @@ class Game:
         Returns:
             list[dict]: A list of all the collections in the game.
         '''
+        if not self.began:
+            # Should migrate to a custom exception
+            return ActionInvalidException("Game has not begun")
+        
         return self.collections  
 
     @action
@@ -617,16 +662,3 @@ class Game:
 
     def __repr__(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-
-
-
-from pprint import pprint
-pprint(
-    Game()
-        .add_player("1")
-        .add_player("2")
-        .begin("./core/cards.json", "./core/collections.json")
-        .action_take_different("1", ("black", "white", "red"))
-        .action_take_same("2", "black")
-        .get_visible_state()
-)
