@@ -125,7 +125,19 @@ class Game:
     def __init__(self):
         self.players = {}
         self.began = False
-        
+    
+    def _ensure_game_began(func):
+        '''
+        A decorator that ensures the method is only called after the game has
+        begun.
+        '''
+        def wrapper(self, *args, **kwargs):
+            if not self.began:
+                raise ActionInvalidException("Game has not begun")
+            return func(self, *args, **kwargs)
+        return wrapper
+    
+    @_ensure_game_began
     def _find_tier_of_card(self, card_id: int) -> int:
         '''
         Find the tier of a card.
@@ -141,6 +153,7 @@ class Game:
         
         return self.cards[card_id]['tier']
     
+    @_ensure_game_began
     def _get_player_discount(self, player_id: str, color: str) -> dict[str, int]:
         '''
         Get the discounts of a player for a given color.
@@ -159,6 +172,7 @@ class Game:
         return len([card_id for card_id in player["developments"] 
                     if self.cards[card_id]["discount"] == color])
 
+    @_ensure_game_began
     def _get_player_score(self, player_id: str) -> int:
         '''
         Get the score of a player.
@@ -177,6 +191,7 @@ class Game:
         
         return score_from_developments + score_from_collection
     
+    @_ensure_game_began
     def _assign_collection_if_eligible(self, player_id: str) -> bool:
         '''
         Assign a collection to a player if they are eligible.
