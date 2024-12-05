@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Game Client</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #messages { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; }
+        #messages div { margin-bottom: 10px; }
+        #input { margin-top: 10px; }
+        #input input, #input button { padding: 5px; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Basic Test Client</h1>
+    <div id="connection">
+        <label for="ws-url">WebSocket URL:</label>
+        <input type="text" id="ws-url" value="ws://localhost:8000/ws" size="30">
+        <button id="connect-btn">Connect</button>
+        <button id="disconnect-btn" disabled>Disconnect</button>
+    </div>
+
+    <div id="input" style="display: none;">
+        <h2>Commands</h2>
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" placeholder="Enter your username" value="testuser">
+        </div>
+        <div>
+            <label for="room-name">Room Name:</label>
+            <input type="text" id="room-name" placeholder="Enter room name" value="testroom1">
+        </div>
+        <div>
+            <button id="create-room-btn">Create Room</button>
+            <button id="join-room-btn">Join Room</button>
+            <button id="begin-game-btn">Begin Game</button>
+            <button id="view-room-btn">View Room</button>
+            <button id="get-cards-and-collections-btn">Get Glossary</button>
+        </div>
+    </div>
+
+    <h2>Messages</h2>
+    <div id="messages"></div>
+
+    <script>
+        let websocket;
+        const messagesDiv = document.getElementById('messages');
+        const connectBtn = document.getElementById('connect-btn');
+        const disconnectBtn = document.getElementById('disconnect-btn');
+        const inputDiv = document.getElementById('input');
+
+        connectBtn.addEventListener('click', () => {
+            const wsUrl = document.getElementById('ws-url').value;
+            websocket = new WebSocket(wsUrl);
+
+            websocket.onopen = function(event) {
+                logMessage('Connected to ' + wsUrl);
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+                inputDiv.style.display = 'block';
+            };
+
+            websocket.onmessage = function(event) {
+                logMessage('Received: ' + event.data);
+            };
+
+            websocket.onclose = function(event) {
+                logMessage('Disconnected from ' + wsUrl);
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+                inputDiv.style.display = 'none';
+            };
+
+            websocket.onerror = function(event) {
+                logMessage('Error: ' + event.data);
+            };
+        });
+
+        disconnectBtn.addEventListener('click', () => {
+            if (websocket) {
+                websocket.close();
+            }
+        });
+
+        document.getElementById('create-room-btn').addEventListener('click', () => {
+            sendCommand('create_room');
+        });
+
+        document.getElementById('join-room-btn').addEventListener('click', () => {
+            sendCommand('join_room');
+        });
+
+        document.getElementById('begin-game-btn').addEventListener('click', () => {
+            sendCommand('begin_game');
+        });
+
+        document.getElementById('view-room-btn').addEventListener('click', () => {
+            sendCommand('view_room');
+        });
+
+        document.getElementById('get-cards-and-collections-btn').addEventListener('click', () => {
+            sendCommand('get_cards_and_collections');
+        });
+
+        function sendCommand(command) {
+            const username = document.getElementById('username').value;
+            const roomName = document.getElementById('room-name').value;
+
+            if (!username || !roomName) {
+                alert('Please enter both username and room name.');
+                return;
+            }
+
+            const message = {
+                command: command,
+                room_name: roomName,
+                username: username
+            };
+
+            websocket.send(JSON.stringify(message));
+            logMessage('Sent: ' + JSON.stringify(message));
+        }
+
+        function logMessage(message) {
+            const messageElem = document.createElement('div');
+            messageElem.textContent = message;
+            messagesDiv.appendChild(messageElem);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
