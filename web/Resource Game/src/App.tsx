@@ -6,6 +6,8 @@ import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { BorderBeam } from "@/components/ui/border-beam"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import ShineBorder from '@/components/ui/shine-border'
 import { RainbowButton } from './components/ui/rainbow-button'
 import ShimmerButton from './components/ui/shimmer-button'
@@ -172,7 +174,7 @@ const tokenColorScheme: Record<string, Record<string, string>> = {
     'backgroundDark': 'bg-stone-400',
     'indicator': 'bg-stone-500',
     'text': 'text-stone-950',
-    'textlight': 'text-stone-500',
+    'textlight': 'text-stone-600',
     'border': 'border-stone-600',
   },
   'Red': {
@@ -348,10 +350,15 @@ function WalletSection() {
       <CardContent className="p-4">
         <div className="flex items-start gap-4">
           <div>
-            <CardTitle className="flex items-center gap-2 pb-4">
-              <Coins className="h-5 w-5 text-muted-foreground" />
-              Wallet <div className="text-muted-foreground">({GetDisplayName()})</div>
-            </CardTitle>
+            <div className="flex justify-between">
+              <CardTitle className="flex items-center gap-2 pb-4">
+                <Coins className="h-5 w-5 text-muted-foreground" />
+                Wallet <div className="text-muted-foreground">({GetDisplayName()})</div>
+              </CardTitle>
+
+              <div className="font-semibold text-muted-foreground">Total: {total} / 10</div>
+            </div>
+
             <div className="flex flex-wrap gap-2">
               {tokens.map((token) => (
                 <div key={token.name} className={`${tokenColorScheme[token.name].background} p-2 rounded w-24`}>
@@ -418,7 +425,7 @@ function GameCard({ card }: { card: Card }) {
           <div className="flex-grow"></div>
           <div className={`flex flex-col items-center pt-1`}>
             <Gem className={`h-8 w-8 ${GetTokenColorScheme(card.discount).textlight}`} />
-            <div className={`text-md text-muted-foreground font-medium ${GetTokenColorScheme(card.discount).textlight}`}>-1</div>
+            {/* <div className={`text-md text-muted-foreground font-medium ${GetTokenColorScheme(card.discount).textlight}`}>-1</div> */}
           </div>
 
         </div>
@@ -432,11 +439,11 @@ function GameCard({ card }: { card: Card }) {
 
           <div className="flex flex-row gap-1">
             <div className="text-sm text-muted-foreground font-semibold">Price:</div>
-            {IsFree(priceAfterDiscount) ? <RainbowText text="Free!" className="text-sm font-bold" /> : <></>}
+            {IsFree(card.price) ? <RainbowText text="Free!" className="text-sm font-bold" /> : <></>}
           </div>
 
           <div className="grid grid-cols-4 gap-2">
-            {GetOrderedPrice(priceAfterDiscount).map(([color, amount]) => (
+            {GetOrderedPrice(card.price).map(([color, amount]) => (
               amount > 0 && (
                 <Badge
                   key={color}
@@ -495,7 +502,7 @@ function ReservationCard({ card }: { card: Card }) {
 
           <div className="flex justify-between gap-1">
             <div className="grid grid-cols-4 gap-1 items-center">
-              {GetOrderedPrice(priceAfterDiscount).map(([color, amount]) => (
+              {GetOrderedPrice(card.price).map(([color, amount]) => (
                 amount > 0 && (
                   <Badge
                     key={color}
@@ -704,6 +711,20 @@ function DevelopmentsSection() {
   )
 }
 
+function SettingsSection() {
+  return (
+    <Card className="p-4">
+      <CardContent className="text-muted-foreground">
+
+        <div className="flex items-center space-x-2">
+          <Switch id="airplane-mode" className="data-[state=checked]:bg-muted-foreground" />
+          <Label htmlFor="airplane-mode">View Discounted Prices</Label>
+        </div>
+
+      </CardContent>
+    </Card>
+  )
+}
 
 
 function GameInterface() {
@@ -728,10 +749,12 @@ function GameInterface() {
             <CardGrid />
           </div>
 
-          {/* Wallet anchored at the bottom */}
-          <div className="mt-auto w-full">
+          {/* Anchored at the bottom */}
+          <div className="mt-auto w-full flex flex-row gap-2 ">
 
             <WalletSection />
+
+            <SettingsSection />
 
           </div>
 
