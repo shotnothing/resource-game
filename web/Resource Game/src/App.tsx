@@ -8,11 +8,13 @@ import { Badge } from "@/components/ui/badge"
 import { BorderBeam } from "@/components/ui/border-beam"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import ShineBorder from '@/components/ui/shine-border'
-import { RainbowButton } from './components/ui/rainbow-button'
-import ShimmerButton from './components/ui/shimmer-button'
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
 import { cn } from "@/lib/utils"
-import { ChevronRight, ChevronsRight, Coins, Crown, Flag, Gem, Percent, PersonStanding, Swords, TicketMinus, Trophy, X } from 'lucide-react'
+import { ChevronsRight, Coins, Crown, Flag, Gem, PersonStanding, Swords, Trophy } from 'lucide-react'
 import './App.css'
 
 import art from './art.json'
@@ -80,6 +82,21 @@ function MiniReservationCard({ card }: { card: Card }) {
   )
 }
 
+function MiniHoverReservationCard({ card }: { card: Card }) {
+  return (
+    <HoverCard openDelay={100} closeDelay={100}>
+      <HoverCardTrigger>
+        <MiniReservationCard card={card} />
+      </HoverCardTrigger>
+      <HoverCardContent className="w-full p-0">
+        <div className="w-full">
+          <ReservationCard card={card} isPurchasable={false} />
+        </div>
+      </HoverCardContent>
+    </HoverCard>
+  )
+}
+
 function PlayerCard({ player }: { player: Player }) {
   const score = GetPlayerScore(player)
   const totalDiscount = GetPlayerDiscount(player)
@@ -124,7 +141,7 @@ function PlayerCard({ player }: { player: Player }) {
                   <p className="text-sm font-semibold text-muted-foreground">Reservations:</p>
                   <div className="grid grid-cols-3 gap-2">
                     {reservations.map((reservation) => (
-                      <MiniReservationCard key={reservation.id} card={reservation} />
+                      <MiniHoverReservationCard key={reservation.id} card={reservation} />
                     ))}
                   </div>
                 </div>
@@ -353,10 +370,11 @@ function WalletSection() {
             <div className="flex justify-between">
               <CardTitle className="flex items-center gap-2 pb-4">
                 <Coins className="h-5 w-5 text-muted-foreground" />
-                Wallet <div className="text-muted-foreground">({GetDisplayName()})</div>
+                Wallet
+                <div className="text-muted-foreground">({GetDisplayName()})</div>
               </CardTitle>
 
-              <div className="font-semibold text-muted-foreground">Total: {total} / 10</div>
+              <div className="font-semibold text-muted-foreground">{total} / 10</div>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -483,7 +501,7 @@ function CardGrid() {
   )
 }
 
-function ReservationCard({ card }: { card: Card }) {
+function ReservationCard({ card, isPurchasable = true }: { card: Card, isPurchasable: boolean }) {
   const art = GetArtFromCard(card)
 
   const discount = GetPlayerDiscount(currentPlayer)
@@ -517,7 +535,7 @@ function ReservationCard({ card }: { card: Card }) {
               ))}
             </div>
 
-            <div className="flex flex-col items-center gap-1">
+            {isPurchasable && <div className="flex flex-col items-center gap-1">
               <Button
                 className={`px-2 h-8 ml-3 relative`}
                 variant="outline"
@@ -528,7 +546,7 @@ function ReservationCard({ card }: { card: Card }) {
                 <BorderBeam size={50} duration={5} />
               </Button>
 
-            </div>
+            </div>}
 
 
           </div>
@@ -548,7 +566,8 @@ function ReservationsSection() {
       <CardHeader className="py-5">
         <CardTitle className="flex items-center gap-2">
           <Flag className="h-5 w-5 text-muted-foreground" />
-          Reservations <div className="text-muted-foreground">({GetDisplayName()})</div>
+          Reservations
+          <div className="text-muted-foreground">({GetDisplayName()})</div>
         </CardTitle>
       </CardHeader>
       <CardContent className="px-4">
@@ -628,7 +647,8 @@ function NoblesSection() {
       <CardHeader className="py-5">
         <CardTitle className="flex items-center gap-2">
           <PersonStanding className="h-5 w-5 text-muted-foreground text-yellow-500" />
-          Nobles <div className="text-muted-foreground text-sm">(+3 Victory Points)</div>
+          Nobles
+          {/* <div className="text-muted-foreground text-sm">(+3 Victory Points)</div> */}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -668,7 +688,8 @@ function DevelopmentsSection() {
       <CardHeader className="py-5">
         <CardTitle className="flex items-center gap-2">
           <Trophy className="h-5 w-5 text-muted-foreground" />
-          Developments <div className="text-muted-foreground">({GetDisplayName()})</div>
+          Developments
+          <div className="text-muted-foreground">({GetDisplayName()})</div>
         </CardTitle>
       </CardHeader>
       <CardContent className="px-4 flex-1 overflow-hidden flex flex-col">
