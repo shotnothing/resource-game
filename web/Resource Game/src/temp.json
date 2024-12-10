@@ -1,0 +1,1453 @@
+{
+    "cards": [
+        {
+            "art": "card1",
+            "discount": "black",
+            "id": 0,
+            "price": {
+                "black": 0,
+                "blue": 1,
+                "green": 1,
+                "red": 1,
+                "white": 1
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card2",
+            "discount": "black",
+            "id": 1,
+            "price": {
+                "black": 0,
+                "blue": 2,
+                "green": 1,
+                "red": 1,
+                "white": 1
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card3",
+            "discount": "black",
+            "id": 2,
+            "price": {
+                "black": 0,
+                "blue": 2,
+                "green": 0,
+                "red": 1,
+                "white": 2
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card4",
+            "discount": "black",
+            "id": 3,
+            "price": {
+                "black": 1,
+                "blue": 0,
+                "green": 1,
+                "red": 3,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card5",
+            "discount": "black",
+            "id": 4,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 2,
+                "red": 1,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card6",
+            "discount": "black",
+            "id": 5,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 2,
+                "red": 0,
+                "white": 2
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card7",
+            "discount": "black",
+            "id": 6,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 3,
+                "red": 0,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card8",
+            "discount": "black",
+            "id": 7,
+            "price": {
+                "black": 0,
+                "blue": 4,
+                "green": 0,
+                "red": 0,
+                "white": 0
+            },
+            "score": 1,
+            "tier": "1"
+        },
+        {
+            "art": "card9",
+            "discount": "blue",
+            "id": 8,
+            "price": {
+                "black": 1,
+                "blue": 0,
+                "green": 1,
+                "red": 1,
+                "white": 1
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card10",
+            "discount": "blue",
+            "id": 9,
+            "price": {
+                "black": 1,
+                "blue": 0,
+                "green": 1,
+                "red": 2,
+                "white": 1
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card11",
+            "discount": "blue",
+            "id": 10,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 2,
+                "red": 2,
+                "white": 1
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card12",
+            "discount": "blue",
+            "id": 11,
+            "price": {
+                "black": 0,
+                "blue": 1,
+                "green": 3,
+                "red": 1,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card13",
+            "discount": "blue",
+            "id": 12,
+            "price": {
+                "black": 2,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 1
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card14",
+            "discount": "blue",
+            "id": 13,
+            "price": {
+                "black": 2,
+                "blue": 0,
+                "green": 2,
+                "red": 0,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card15",
+            "discount": "blue",
+            "id": 14,
+            "price": {
+                "black": 3,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card16",
+            "discount": "blue",
+            "id": 15,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 0,
+                "red": 4,
+                "white": 0
+            },
+            "score": 1,
+            "tier": "1"
+        },
+        {
+            "art": "card17",
+            "discount": "white",
+            "id": 16,
+            "price": {
+                "black": 1,
+                "blue": 1,
+                "green": 1,
+                "red": 1,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card18",
+            "discount": "white",
+            "id": 17,
+            "price": {
+                "black": 1,
+                "blue": 1,
+                "green": 2,
+                "red": 1,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card19",
+            "discount": "white",
+            "id": 18,
+            "price": {
+                "black": 1,
+                "blue": 2,
+                "green": 2,
+                "red": 0,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card20",
+            "discount": "white",
+            "id": 19,
+            "price": {
+                "black": 1,
+                "blue": 1,
+                "green": 0,
+                "red": 0,
+                "white": 3
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card21",
+            "discount": "white",
+            "id": 20,
+            "price": {
+                "black": 1,
+                "blue": 0,
+                "green": 0,
+                "red": 2,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card22",
+            "discount": "white",
+            "id": 21,
+            "price": {
+                "black": 2,
+                "blue": 2,
+                "green": 0,
+                "red": 0,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card23",
+            "discount": "white",
+            "id": 22,
+            "price": {
+                "black": 0,
+                "blue": 3,
+                "green": 0,
+                "red": 0,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card24",
+            "discount": "white",
+            "id": 23,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 4,
+                "red": 0,
+                "white": 0
+            },
+            "score": 1,
+            "tier": "1"
+        },
+        {
+            "art": "card25",
+            "discount": "green",
+            "id": 24,
+            "price": {
+                "black": 1,
+                "blue": 1,
+                "green": 0,
+                "red": 1,
+                "white": 1
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card26",
+            "discount": "green",
+            "id": 25,
+            "price": {
+                "black": 2,
+                "blue": 1,
+                "green": 0,
+                "red": 1,
+                "white": 1
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card27",
+            "discount": "green",
+            "id": 26,
+            "price": {
+                "black": 2,
+                "blue": 1,
+                "green": 0,
+                "red": 2,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card28",
+            "discount": "green",
+            "id": 27,
+            "price": {
+                "black": 0,
+                "blue": 3,
+                "green": 1,
+                "red": 0,
+                "white": 1
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card29",
+            "discount": "green",
+            "id": 28,
+            "price": {
+                "black": 0,
+                "blue": 1,
+                "green": 0,
+                "red": 0,
+                "white": 2
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card30",
+            "discount": "green",
+            "id": 29,
+            "price": {
+                "black": 0,
+                "blue": 2,
+                "green": 0,
+                "red": 2,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card31",
+            "discount": "green",
+            "id": 30,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 0,
+                "red": 3,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card32",
+            "discount": "green",
+            "id": 31,
+            "price": {
+                "black": 4,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 0
+            },
+            "score": 1,
+            "tier": "1"
+        },
+        {
+            "art": "card33",
+            "discount": "red",
+            "id": 32,
+            "price": {
+                "black": 1,
+                "blue": 1,
+                "green": 1,
+                "red": 0,
+                "white": 1
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card34",
+            "discount": "red",
+            "id": 33,
+            "price": {
+                "black": 1,
+                "blue": 1,
+                "green": 1,
+                "red": 0,
+                "white": 2
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card35",
+            "discount": "red",
+            "id": 34,
+            "price": {
+                "black": 2,
+                "blue": 0,
+                "green": 1,
+                "red": 0,
+                "white": 2
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card36",
+            "discount": "red",
+            "id": 35,
+            "price": {
+                "black": 3,
+                "blue": 0,
+                "green": 0,
+                "red": 1,
+                "white": 1
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card37",
+            "discount": "red",
+            "id": 36,
+            "price": {
+                "black": 0,
+                "blue": 2,
+                "green": 1,
+                "red": 0,
+                "white": 0
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card38",
+            "discount": "red",
+            "id": 37,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 0,
+                "red": 2,
+                "white": 2
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card39",
+            "discount": "red",
+            "id": 38,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 3
+            },
+            "score": 0,
+            "tier": "1"
+        },
+        {
+            "art": "card40",
+            "discount": "red",
+            "id": 39,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 4
+            },
+            "score": 1,
+            "tier": "1"
+        },
+        {
+            "art": "card41",
+            "discount": "black",
+            "id": 40,
+            "price": {
+                "black": 0,
+                "blue": 2,
+                "green": 2,
+                "red": 0,
+                "white": 3
+            },
+            "score": 1,
+            "tier": "2"
+        },
+        {
+            "art": "card42",
+            "discount": "black",
+            "id": 41,
+            "price": {
+                "black": 2,
+                "blue": 0,
+                "green": 3,
+                "red": 0,
+                "white": 3
+            },
+            "score": 1,
+            "tier": "2"
+        },
+        {
+            "art": "card43",
+            "discount": "black",
+            "id": 42,
+            "price": {
+                "black": 0,
+                "blue": 1,
+                "green": 4,
+                "red": 2,
+                "white": 0
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card44",
+            "discount": "black",
+            "id": 43,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 5,
+                "red": 3,
+                "white": 0
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card45",
+            "discount": "black",
+            "id": 44,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 5
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card46",
+            "discount": "black",
+            "id": 45,
+            "price": {
+                "black": 6,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 0
+            },
+            "score": 3,
+            "tier": "2"
+        },
+        {
+            "art": "card47",
+            "discount": "blue",
+            "id": 46,
+            "price": {
+                "black": 0,
+                "blue": 2,
+                "green": 2,
+                "red": 3,
+                "white": 0
+            },
+            "score": 1,
+            "tier": "2"
+        },
+        {
+            "art": "card48",
+            "discount": "blue",
+            "id": 47,
+            "price": {
+                "black": 3,
+                "blue": 2,
+                "green": 3,
+                "red": 0,
+                "white": 0
+            },
+            "score": 1,
+            "tier": "2"
+        },
+        {
+            "art": "card49",
+            "discount": "blue",
+            "id": 48,
+            "price": {
+                "black": 0,
+                "blue": 3,
+                "green": 0,
+                "red": 0,
+                "white": 5
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card50",
+            "discount": "blue",
+            "id": 49,
+            "price": {
+                "black": 4,
+                "blue": 0,
+                "green": 0,
+                "red": 1,
+                "white": 2
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card51",
+            "discount": "blue",
+            "id": 50,
+            "price": {
+                "black": 0,
+                "blue": 5,
+                "green": 0,
+                "red": 0,
+                "white": 0
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card52",
+            "discount": "blue",
+            "id": 51,
+            "price": {
+                "black": 0,
+                "blue": 6,
+                "green": 0,
+                "red": 0,
+                "white": 0
+            },
+            "score": 3,
+            "tier": "2"
+        },
+        {
+            "art": "card53",
+            "discount": "white",
+            "id": 52,
+            "price": {
+                "black": 2,
+                "blue": 0,
+                "green": 3,
+                "red": 2,
+                "white": 0
+            },
+            "score": 1,
+            "tier": "2"
+        },
+        {
+            "art": "card54",
+            "discount": "white",
+            "id": 53,
+            "price": {
+                "black": 0,
+                "blue": 3,
+                "green": 0,
+                "red": 3,
+                "white": 2
+            },
+            "score": 1,
+            "tier": "2"
+        },
+        {
+            "art": "card55",
+            "discount": "white",
+            "id": 54,
+            "price": {
+                "black": 2,
+                "blue": 0,
+                "green": 1,
+                "red": 4,
+                "white": 0
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card56",
+            "discount": "white",
+            "id": 55,
+            "price": {
+                "black": 3,
+                "blue": 0,
+                "green": 0,
+                "red": 5,
+                "white": 0
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card57",
+            "discount": "white",
+            "id": 56,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 0,
+                "red": 5,
+                "white": 0
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card58",
+            "discount": "white",
+            "id": 57,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 6
+            },
+            "score": 3,
+            "tier": "2"
+        },
+        {
+            "art": "card59",
+            "discount": "green",
+            "id": 58,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 2,
+                "red": 3,
+                "white": 3
+            },
+            "score": 1,
+            "tier": "2"
+        },
+        {
+            "art": "card60",
+            "discount": "green",
+            "id": 59,
+            "price": {
+                "black": 2,
+                "blue": 3,
+                "green": 0,
+                "red": 0,
+                "white": 2
+            },
+            "score": 1,
+            "tier": "2"
+        },
+        {
+            "art": "card61",
+            "discount": "green",
+            "id": 60,
+            "price": {
+                "black": 1,
+                "blue": 2,
+                "green": 0,
+                "red": 0,
+                "white": 4
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card62",
+            "discount": "green",
+            "id": 61,
+            "price": {
+                "black": 0,
+                "blue": 5,
+                "green": 3,
+                "red": 0,
+                "white": 0
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card63",
+            "discount": "green",
+            "id": 62,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 5,
+                "red": 0,
+                "white": 0
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card64",
+            "discount": "green",
+            "id": 63,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 6,
+                "red": 0,
+                "white": 0
+            },
+            "score": 3,
+            "tier": "2"
+        },
+        {
+            "art": "card65",
+            "discount": "red",
+            "id": 64,
+            "price": {
+                "black": 3,
+                "blue": 0,
+                "green": 0,
+                "red": 2,
+                "white": 2
+            },
+            "score": 1,
+            "tier": "2"
+        },
+        {
+            "art": "card66",
+            "discount": "red",
+            "id": 65,
+            "price": {
+                "black": 3,
+                "blue": 3,
+                "green": 0,
+                "red": 2,
+                "white": 0
+            },
+            "score": 1,
+            "tier": "2"
+        },
+        {
+            "art": "card67",
+            "discount": "red",
+            "id": 66,
+            "price": {
+                "black": 0,
+                "blue": 4,
+                "green": 2,
+                "red": 0,
+                "white": 1
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card68",
+            "discount": "red",
+            "id": 67,
+            "price": {
+                "black": 5,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 3
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card69",
+            "discount": "red",
+            "id": 68,
+            "price": {
+                "black": 5,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 0
+            },
+            "score": 2,
+            "tier": "2"
+        },
+        {
+            "art": "card70",
+            "discount": "red",
+            "id": 69,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 0,
+                "red": 6,
+                "white": 0
+            },
+            "score": 3,
+            "tier": "2"
+        },
+        {
+            "art": "card71",
+            "discount": "black",
+            "id": 70,
+            "price": {
+                "black": 0,
+                "blue": 3,
+                "green": 5,
+                "red": 3,
+                "white": 3
+            },
+            "score": 3,
+            "tier": "3"
+        },
+        {
+            "art": "card72",
+            "discount": "black",
+            "id": 71,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 0,
+                "red": 7,
+                "white": 0
+            },
+            "score": 4,
+            "tier": "3"
+        },
+        {
+            "art": "card73",
+            "discount": "black",
+            "id": 72,
+            "price": {
+                "black": 3,
+                "blue": 0,
+                "green": 3,
+                "red": 6,
+                "white": 0
+            },
+            "score": 4,
+            "tier": "3"
+        },
+        {
+            "art": "card74",
+            "discount": "black",
+            "id": 73,
+            "price": {
+                "black": 3,
+                "blue": 0,
+                "green": 0,
+                "red": 7,
+                "white": 0
+            },
+            "score": 5,
+            "tier": "3"
+        },
+        {
+            "art": "card75",
+            "discount": "blue",
+            "id": 74,
+            "price": {
+                "black": 5,
+                "blue": 0,
+                "green": 3,
+                "red": 3,
+                "white": 3
+            },
+            "score": 3,
+            "tier": "3"
+        },
+        {
+            "art": "card76",
+            "discount": "blue",
+            "id": 75,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 7
+            },
+            "score": 4,
+            "tier": "3"
+        },
+        {
+            "art": "card77",
+            "discount": "blue",
+            "id": 76,
+            "price": {
+                "black": 3,
+                "blue": 3,
+                "green": 0,
+                "red": 0,
+                "white": 6
+            },
+            "score": 4,
+            "tier": "3"
+        },
+        {
+            "art": "card78",
+            "discount": "blue",
+            "id": 77,
+            "price": {
+                "black": 0,
+                "blue": 3,
+                "green": 0,
+                "red": 0,
+                "white": 7
+            },
+            "score": 5,
+            "tier": "3"
+        },
+        {
+            "art": "card79",
+            "discount": "white",
+            "id": 78,
+            "price": {
+                "black": 3,
+                "blue": 3,
+                "green": 3,
+                "red": 5,
+                "white": 0
+            },
+            "score": 3,
+            "tier": "3"
+        },
+        {
+            "art": "card80",
+            "discount": "white",
+            "id": 79,
+            "price": {
+                "black": 7,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 0
+            },
+            "score": 4,
+            "tier": "3"
+        },
+        {
+            "art": "card81",
+            "discount": "white",
+            "id": 80,
+            "price": {
+                "black": 6,
+                "blue": 0,
+                "green": 0,
+                "red": 3,
+                "white": 3
+            },
+            "score": 4,
+            "tier": "3"
+        },
+        {
+            "art": "card82",
+            "discount": "white",
+            "id": 81,
+            "price": {
+                "black": 7,
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+                "white": 3
+            },
+            "score": 5,
+            "tier": "3"
+        },
+        {
+            "art": "card83",
+            "discount": "green",
+            "id": 82,
+            "price": {
+                "black": 3,
+                "blue": 3,
+                "green": 0,
+                "red": 3,
+                "white": 5
+            },
+            "score": 3,
+            "tier": "3"
+        },
+        {
+            "art": "card84",
+            "discount": "green",
+            "id": 83,
+            "price": {
+                "black": 0,
+                "blue": 7,
+                "green": 0,
+                "red": 0,
+                "white": 0
+            },
+            "score": 4,
+            "tier": "3"
+        },
+        {
+            "art": "card85",
+            "discount": "green",
+            "id": 84,
+            "price": {
+                "black": 0,
+                "blue": 6,
+                "green": 3,
+                "red": 0,
+                "white": 3
+            },
+            "score": 4,
+            "tier": "3"
+        },
+        {
+            "art": "card86",
+            "discount": "green",
+            "id": 85,
+            "price": {
+                "black": 0,
+                "blue": 7,
+                "green": 3,
+                "red": 0,
+                "white": 0
+            },
+            "score": 5,
+            "tier": "3"
+        },
+        {
+            "art": "card87",
+            "discount": "red",
+            "id": 86,
+            "price": {
+                "black": 3,
+                "blue": 5,
+                "green": 3,
+                "red": 0,
+                "white": 3
+            },
+            "score": 3,
+            "tier": "3"
+        },
+        {
+            "art": "card88",
+            "discount": "red",
+            "id": 87,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 7,
+                "red": 0,
+                "white": 0
+            },
+            "score": 4,
+            "tier": "3"
+        },
+        {
+            "art": "card89",
+            "discount": "red",
+            "id": 88,
+            "price": {
+                "black": 0,
+                "blue": 3,
+                "green": 6,
+                "red": 3,
+                "white": 0
+            },
+            "score": 4,
+            "tier": "3"
+        },
+        {
+            "art": "card90",
+            "discount": "red",
+            "id": 89,
+            "price": {
+                "black": 0,
+                "blue": 0,
+                "green": 7,
+                "red": 3,
+                "white": 0
+            },
+            "score": 5,
+            "tier": "3"
+        }
+    ],
+    "collections": [
+        {
+            "art": "noble1",
+            "score": 3,
+            "trigger": {
+                "blue": 4,
+                "green": 4
+            }
+        },
+        {
+            "art": "noble2",
+            "score": 3,
+            "trigger": {
+                "black": 4,
+                "red": 4
+            }
+        },
+        {
+            "art": "noble3",
+            "score": 3,
+            "trigger": {
+                "blue": 3,
+                "green": 3,
+                "red": 3
+            }
+        },
+        {
+            "art": "noble4",
+            "score": 3,
+            "trigger": {
+                "black": 3,
+                "red": 3,
+                "white": 3
+            }
+        },
+        {
+            "art": "noble5",
+            "score": 3,
+            "trigger": {
+                "black": 3,
+                "green": 3,
+                "red": 3
+            }
+        },
+        {
+            "art": "noble6",
+            "score": 3,
+            "trigger": {
+                "blue": 4,
+                "white": 4
+            }
+        },
+        {
+            "art": "noble7",
+            "score": 3,
+            "trigger": {
+                "green": 4,
+                "red": 4
+            }
+        },
+        {
+            "art": "noble8",
+            "score": 3,
+            "trigger": {
+                "blue": 3,
+                "green": 3,
+                "white": 3
+            }
+        },
+        {
+            "art": "noble9",
+            "score": 3,
+            "trigger": {
+                "black": 3,
+                "blue": 3,
+                "white": 3
+            }
+        },
+        {
+            "art": "noble10",
+            "score": 3,
+            "trigger": {
+                "black": 4,
+                "white": 4
+            }
+        }
+    ],
+    "game": {
+        "bank": {
+            "black": 4,
+            "blue": 6,
+            "gold": 5,
+            "green": 5,
+            "red": 5,
+            "white": 1
+        },
+        "began": true,
+        "collections_in_play": [
+            2,
+            5,
+            0,
+            7,
+            9
+        ],
+        "decks": {
+            "1": {
+                "visible": [
+                    6,
+                    37,
+                    38,
+                    16
+                ],
+                "hidden_count": 36
+            },
+            "2": {
+                "visible": [
+                    63,
+                    61,
+                    69,
+                    45
+                ],
+                "hidden_count": 26
+            },
+            "3": {
+                "visible": [
+                    70,
+                    84,
+                    80,
+                    73
+                ],
+                "hidden_count": 16
+            }
+        },
+        "players": {
+            "Alice": {
+                "attained_collection": null,
+                "developments": [43, 12, 89, 12, 57, 15, 43, 68, 24],
+                "reservations": [25, 49, 72],
+                "wallet": {
+                    "black": 0,
+                    "blue": 1,
+                    "gold": 0,
+                    "green": 1,
+                    "red": 2,
+                    "white": 3
+                }
+            },
+            "Bob": {
+                "attained_collection": null,
+                "developments": [64, 23, 54],
+                "reservations": [35, 25, 42],
+                "wallet": {
+                    "black": 2,
+                    "blue": 0,
+                    "gold": 0,
+                    "green": 0,
+                    "red": 0,
+                    "white": 0
+                }
+            },
+            "Charlie": {
+                "attained_collection": null,
+                "developments": [68, 19],
+                "reservations": [43],
+                "wallet": {
+                    "black": 0,
+                    "blue": 0,
+                    "gold": 0,
+                    "green": 0,
+                    "red": 0,
+                    "white": 2
+                }
+            },
+            "Diana": {
+                "attained_collection": null,
+                "developments": [],
+                "reservations": [76, 9],
+                "wallet": {
+                    "black": 1,
+                    "blue": 0,
+                    "gold": 0,
+                    "green": 1,
+                    "red": 0,
+                    "white": 1
+                }
+            }
+        },
+        "turn": 4
+    }
+}
