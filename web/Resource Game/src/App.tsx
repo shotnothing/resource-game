@@ -61,12 +61,54 @@ function MiniDiscountDisplay({ tokens, dropZero = false }: { tokens: Record<stri
       dropZero && amount == 0 ? <></> : <Badge
         key={color}
         className={
-          `${GetTokenColorScheme(color).verylight} ${GetTokenColorScheme(color).border} text-xs text-center ${GetTokenColorScheme(color).text} h-5`
+          `${GetTokenColorScheme(color).verylight}
+           ${GetTokenColorScheme(color).border}
+           ${GetTokenColorScheme(color).text}
+           text-xs text-center h-5`
         }
         variant="outline"
       >
         {amount}
       </Badge>
+    ))
+  } </>)
+}
+
+function MiniHoverDiscountHover({ color, player }: { color: string, player: Player }) {
+  const filteredCardIndexes = player.developments.filter((index) => gameState.cards[index].discount == color)
+  const filteredCards = filteredCardIndexes.map((index) => gameState.cards[index])
+
+  return (
+    <div className="w-full flex flex-col gap-1 rounded-md">
+      {filteredCards.map((card) => (
+        <DevelopmentCard key={card.id} card={card} />
+      ))}
+    </div>
+  )
+}
+
+function MiniHoverDiscountDisplay({ tokens, player }: { tokens: Record<string, number>, player: Player }) {
+  return (<>{
+    GetOrderedPrice(tokens).map(([color, amount]) => (
+      <HoverCard openDelay={100} closeDelay={100}>
+        <HoverCardTrigger>
+          <Badge
+            key={color}
+            className={
+              `${GetTokenColorScheme(color).verylight}
+           ${GetTokenColorScheme(color).border}
+           ${GetTokenColorScheme(color).text}
+           text-xs text-center h-5`
+            }
+            variant="outline"
+          >
+            {amount}
+          </Badge>
+        </HoverCardTrigger>
+        <HoverCardContent className="w-full p-0 rounded-md">
+          <MiniHoverDiscountHover color={color} player={player} />
+        </HoverCardContent>
+      </HoverCard>
     ))
   } </>)
 }
@@ -111,7 +153,14 @@ function PlayerCard({ player }: { player: Player }) {
             <Swords className="h-4 w-4" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-medium">{player.name} {player.name == yourName ? "(You)" : ""}</h3>
+
+            <div className="flex flex-row items-center justify-between gap-2">
+              <h3 className="font-medium">{player.name} {player.name == yourName ? "(You)" : ""}</h3>
+              <div className="flex flex-row items-center gap-1">
+                {player.name != yourName && <p className="text-md font-bold text-muted-foreground">{GetPlayerScore(player)}</p>}
+                {player.name != yourName && <Trophy className="h-4 w-4 text-muted-foreground/50" />}
+              </div>
+            </div>
 
             {player.name != yourName && (
               <>
@@ -127,15 +176,15 @@ function PlayerCard({ player }: { player: Player }) {
                   <p className="text-sm font-semibold text-muted-foreground">Discount:</p>
 
                   <div className="flex flex-row gap-1">
-                    <MiniDiscountDisplay tokens={totalDiscount} />
+                    <MiniHoverDiscountDisplay tokens={totalDiscount} player={player} />
                   </div>
                 </div>
 
-                <div className="flex flex-row gap-2 items-center">
+                {/* <div className="flex flex-row gap-2 items-center">
                   <p className="text-sm font-semibold text-muted-foreground">Victory Points:</p>
                   <p className="text-sm font-bold text-muted-foreground">{score} / 15</p>
                   <Progress value={score / 15 * 100} indicatorColor='bg-muted-foreground' className="h-2 w-16" />
-                </div>
+                </div> */}
 
                 <div className="flex flex-col gap-1">
                   <p className="text-sm font-semibold text-muted-foreground">Reservations:</p>
@@ -374,7 +423,7 @@ function WalletSection() {
                 <div className="text-muted-foreground">({GetDisplayName()})</div>
               </CardTitle>
 
-              <div className="font-semibold text-muted-foreground">{total} / 10</div>
+              <div className="font-semibold text-muted-foreground">Capacity: {total} / 10</div>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -397,18 +446,7 @@ function WalletSection() {
 }
 
 
-function DeckCard({ tier }: { tier: string }) {
-  return (
-    <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-r-4 border-b-4 border-t-0 border-l-0 border-muted-foreground/25">
-      <CardContent className="flex aspect-[3/4] items-center justify-center p-6">
-        <div className="text-center">
-          <div className="text-lg font-semibold">Tier {tier}</div>
-          <div className="text-sm text-muted-foreground">Cards Left: {gameState.game.decks[tier as keyof typeof gameState.game.decks].hidden_count}</div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+
 
 function RainbowText({ text, className }: { text: string, className?: string }) {
   return (
@@ -427,12 +465,36 @@ type Card = {
   tier: string
 }
 
-function GameCard({ card }: { card: Card }) {
+function DeckCard({ tier }: { tier: string }) {
+  return (
+    <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-r-4 border-b-4 border-t-0 border-l-0 border-muted-foreground/25">
+      <CardContent className="flex aspect-[3/4] items-center justify-center p-6">
+        <div className="text-center">
+          <div className="text-lg font-semibold">Tier {tier}</div>
+          <div className="text-sm text-muted-foreground">Cards Left: {gameState.game.decks[tier as keyof typeof gameState.game.decks].hidden_count}</div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function GameCard({
+  card,
+  isFocused = false,
+  setFocused = () => { }
+}: {
+  card: Card,
+  isFocused?: boolean,
+  setFocused: (card: number) => void
+}) {
   const discount = GetPlayerDiscount(currentPlayer)
   const priceAfterDiscount = GetPriceAfterDiscount(card.price, discount)
 
   return (
-    <Card className="transition-all hover:scale-105 shadow-lg">
+    <Card
+      className={cn("transition-all hover:scale-105 shadow-lg", isFocused && "scale-105 shadow-xl shadow-amber-500/50")}
+      onClick={() => setFocused(card.id)}
+    >
       <CardContent className="flex flex-col aspect-[3/4] p-4 py-3">
         <div className="flex items-start gap-2">
           {card.score > 0 && <div>
@@ -451,6 +513,18 @@ function GameCard({ card }: { card: Card }) {
         <div className="flex items-center justify-center flex-col gap-4">
           <div className="text-6xl font-bold">{GetArtFromCard(card).icon}</div>
           <div className="text-md font-bold text-muted-foreground">{GetArtFromCard(card).name}</div>
+          {isFocused && (
+            <div className="flex flex-col gap-2 absolute inset-0 m-auto w-3/4 justify-center">
+              <ActionButton
+                text="Reserve"
+                className="w-11/12 max-w-[200px] opacity-95"
+              />
+              <ActionButton
+                text="Purchase"
+                className="w-11/12 max-w-[200px] opacity-95"
+              />
+            </div>
+          )}
         </div>
 
         <div className="mt-auto">
@@ -481,9 +555,9 @@ function GameCard({ card }: { card: Card }) {
   );
 }
 
-
-
 function CardGrid() {
+  const [focusedCard, setFocusedCard] = useState<number | null>(null)
+
   return (
     <div className="grid grid-cols-5 gap-4">
       {["3", "2", "1"].map((tier) => (
@@ -493,10 +567,46 @@ function CardGrid() {
             const deck = gameState.game.decks[tier as keyof typeof gameState.game.decks]
             const cardIndex = deck.visible[index]
             const card = gameState.cards[cardIndex]
-            return <GameCard key={`card-${tier}-${index}`} card={card} />
+            return <GameCard key={`card-${tier}-${index}`} card={card} isFocused={focusedCard === cardIndex} setFocused={setFocusedCard} />
           })}
         </>
       ))}
+    </div>
+  )
+}
+
+function PriceDisplay({ price }: { price: Record<string, number> }) {
+  return (
+    <div className="grid grid-cols-4 gap-1 items-center">
+      {GetOrderedPrice(price).map(([color, amount]) => (
+        amount > 0 && (
+          <Badge
+            key={color}
+            className={
+              `${GetTokenColorScheme(color).backgroundDark} text-sm text-center ${GetTokenColorScheme(color).text} w-7 h-7`
+            }
+            variant="outline"
+          >
+            {amount}
+          </Badge>
+        )
+      ))}
+    </div>
+  )
+}
+
+function ActionButton({ text, className }: { text: string, className?: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <Button
+        className={`px-2 h-8 ml-3 relative ${className}`}
+        variant="outline"
+      >
+        <ActionMarker />
+        {text}
+
+        <BorderBeam size={50} duration={5} />
+      </Button>
     </div>
   )
 }
@@ -519,40 +629,12 @@ function ReservationCard({ card, isPurchasable = true }: { card: Card, isPurchas
           </div>
 
           <div className="flex justify-between gap-1">
-            <div className="grid grid-cols-4 gap-1 items-center">
-              {GetOrderedPrice(card.price).map(([color, amount]) => (
-                amount > 0 && (
-                  <Badge
-                    key={color}
-                    className={
-                      `${GetTokenColorScheme(color).backgroundDark} text-sm text-center ${GetTokenColorScheme(color).text} w-7 h-7`
-                    }
-                    variant="outline"
-                  >
-                    {amount}
-                  </Badge>
-                )
-              ))}
-            </div>
+            <PriceDisplay price={card.price} />
 
-            {isPurchasable && <div className="flex flex-col items-center gap-1">
-              <Button
-                className={`px-2 h-8 ml-3 relative`}
-                variant="outline"
-              >
-                <ActionMarker />
-                Purchase
-
-                <BorderBeam size={50} duration={5} />
-              </Button>
-
-            </div>}
-
+            {isPurchasable && <ActionButton text="Purchase" />}
 
           </div>
-
         </div>
-
       </CardContent>
     </Card>
   )
@@ -576,25 +658,6 @@ function ReservationsSection() {
             <ReservationCard key={reservation.id} card={reservation} />
           ))}
         </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-function DevelopmentCard({ card }: { card: Card }) {
-  const art = GetArtFromCard(card)
-  return (
-    <Card className={`transition-colors hover:bg-muted/50 border-0 border-l-4 ${GetTokenColorScheme(card.discount).border} ${GetTokenColorScheme(card.discount).verylight}`}>
-      <CardContent className="p-1">
-
-        <div className='flex items-center gap-4'>
-
-          <div className="flex items-center gap-2">
-            <div className="text-2xl">{art.icon}</div>
-            <div className="text-md font-bold text-muted-foreground">{GetArtFromCard(card).name} ({card.score})</div>
-          </div>
-        </div>
-
       </CardContent>
     </Card>
   )
@@ -657,6 +720,27 @@ function NoblesSection() {
           {nobles.map((noble) => (
             <NobleCard key={noble.art} noble={noble} />
           ))}
+        </div>
+
+      </CardContent>
+    </Card>
+  )
+}
+
+function DevelopmentCard({ card }: { card: Card }) {
+  const art = GetArtFromCard(card)
+  return (
+    <Card className={`transition-colors hover:bg-muted/50 border-0 border-l-4 ${GetTokenColorScheme(card.discount).border} ${GetTokenColorScheme(card.discount).verylight}`}>
+      <CardContent className="p-1">
+
+        <div className='flex items-center justify-between gap-4'>
+
+          <div className="flex items-center gap-2">
+            <div className="text-2xl">{art.icon}</div>
+            <div className="text-md font-bold text-muted-foreground">{GetArtFromCard(card).name} ({card.score})</div>
+          </div>
+
+          <PriceDisplay price={card.price} />
         </div>
 
       </CardContent>
