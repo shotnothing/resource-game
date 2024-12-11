@@ -684,15 +684,17 @@ function NobleCard({ noble }: { noble: Noble }) {
 
           <div className="grid grid-cols-2 items-center justify-center gap-1 no-select">
             {GetOrderedPrice(noble.trigger).map(([color, amount]) => (
-              <Badge
-                key={color}
-                className={
-                  `${GetTokenColorScheme(color).verylight} ${GetTokenColorScheme(color).border} text-sm text-center ${GetTokenColorScheme(color).text} h-7`
-                }
-                variant="outline"
-              >
-                {amount}
-              </Badge>
+              amount > 0 && (
+                <Badge
+                  key={color}
+                  className={
+                    `${GetTokenColorScheme(color).verylight} ${GetTokenColorScheme(color).border} text-sm text-center ${GetTokenColorScheme(color).text} h-7`
+                  }
+                  variant="outline"
+                >
+                  {amount}
+                </Badge>
+              )
             ))}
           </div>
 
