@@ -13,13 +13,21 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { ChevronsRight, Coins, Crown, Flag, Gem, PersonStanding, Swords, Trophy } from 'lucide-react'
 import './App.css'
 
 import art from './art.json'
 function GetArtFromCard(card: Card) {
-  console.log(card)
   return art[card.art as keyof typeof art]
 }
 function GetArtFromNoble(noble: Noble) {
@@ -38,6 +46,154 @@ type Player = {
   reservations: number[]
   wallet: Record<string, number>
 }
+
+
+
+
+
+
+export function Take2SameButton() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="w-full relative" variant="outline">
+          <ActionMarker />
+          Take 2 Same
+          <BorderBeam size={50} duration={5} />
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button type="submit">Commit Turn</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export function Take3DiffButton() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="w-full relative" variant="outline">
+          <ActionMarker />
+          Take 3 Diff.
+          <BorderBeam size={50} duration={5} />
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button type="submit">Commit Turn</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export function ReserveButton() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+      <Button
+          className={`px-2 h-8 ml-3 relative w-11/12`}
+          variant="outline"
+        >
+          <ActionMarker />
+          {'Reserve'}
+          <BorderBeam size={50} duration={5} />
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button type="submit">Commit Turn</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export function PurchaseButton() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          className={`px-2 h-8 ml-3 relative w-11/12`}
+          variant="outline"
+        >
+          <ActionMarker />
+          {'Purchase'}
+          <BorderBeam size={50} duration={5} />
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button type="submit">Commit Turn</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export function SmallPurchaseButton() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          className={`px-2 h-8 ml-3 relative w-11/12 `}
+          variant="outline"
+        >
+          <ActionMarker />
+          {'Purchase'}
+          <BorderBeam size={50} duration={5} />
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button type="submit">Commit Turn</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+
+
+
 
 function MiniTokenDisplay({ tokens, dropZero = false }: { tokens: Record<string, number>, dropZero?: boolean }) {
   return (<>{
@@ -378,19 +534,8 @@ function BankSection() {
         <Separator className="w-full my-2" />
 
         <div className="flex flex-row gap-2">
-          <Button className="w-full relative" variant="outline">
-            <ActionMarker />
-            Take 2 Same
-            <BorderBeam size={50} duration={5} />
-
-          </Button>
-
-          <Button className="w-full relative" variant="outline">
-            <ActionMarker />
-            Take 3 Diff.
-            <BorderBeam size={50} duration={5} />
-
-          </Button>
+          <Take2SameButton />
+          <Take3DiffButton />
         </div>
 
       </CardContent>
@@ -517,14 +662,8 @@ function GameCard({
           <div className={cn("text-md font-bold text-muted-foreground", isFocused && "blur-sm")}>{GetArtFromCard(card).name}</div>
           {isFocused && (<>
             <div className="flex flex-col gap-2 absolute inset-0 m-auto w-3/4 justify-center">
-              <ActionButton
-                text="Reserve"
-                className="w-11/12 max-w-[200px] opacity-95"
-              />
-              <ActionButton
-                text="Purchase"
-                className="w-11/12 max-w-[200px] opacity-95"
-              />
+              <PurchaseButton />
+              <ReserveButton />
             </div>
           </>)}
         </div>
@@ -562,7 +701,7 @@ function CardGrid({ focusedCard, setFocusedCard }: { focusedCard: number | null,
     <div className="grid grid-cols-5 gap-4">
       {["3", "2", "1"].map((tier) => (
         <>
-          <DeckCard key={`deck-${tier}`} tier={tier} onClick={() => setFocusedCard(null)} />
+          <DeckCard key={`deck-${tier}`} tier={tier} onClick={() => setFocusedCard(-1)} />
           {[0, 1, 2, 3].map((index) => {
             const deck = gameState.game.decks[tier as keyof typeof gameState.game.decks]
             const cardIndex = deck.visible[index]
@@ -595,22 +734,6 @@ function PriceDisplay({ price }: { price: Record<string, number> }) {
   )
 }
 
-function ActionButton({ text, className }: { text: string, className?: string }) {
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <Button
-        className={`px-2 h-8 ml-3 relative ${className}`}
-        variant="outline"
-      >
-        <ActionMarker />
-        {text}
-
-        <BorderBeam size={50} duration={5} />
-      </Button>
-    </div>
-  )
-}
-
 function ReservationCard({ card, isPurchasable = true }: { card: Card, isPurchasable: boolean }) {
   const art = GetArtFromCard(card)
 
@@ -631,7 +754,12 @@ function ReservationCard({ card, isPurchasable = true }: { card: Card, isPurchas
           <div className="flex justify-between gap-1">
             <PriceDisplay price={card.price} />
 
-            {isPurchasable && <ActionButton text="Purchase" />}
+            {isPurchasable && <PurchaseButton />}
+            
+            {/* Make PriceDisplay not stacked
+            <div className="flex flex-col items-center gap-1">
+              {isPurchasable && <PurchaseButton />}
+            </div> */}
 
           </div>
         </div>
@@ -756,7 +884,9 @@ function DevelopmentCard({ card }: { card: Card }) {
             <div className="text-md font-bold text-muted-foreground">{GetArtFromCard(card).name} ({card.score})</div>
           </div>
 
-          <PriceDisplay price={card.price} />
+          <div className="flex flex-row gap-1">
+            <PriceDisplay price={card.price} />
+          </div>
         </div>
 
       </CardContent>
