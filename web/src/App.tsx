@@ -377,7 +377,7 @@ function PurchaseButton({ card, player }: { card: Card, player: Player }) {
           </DialogDescription>
         </div>
 
-        <div className="w-full">
+        {player.wallet.gold > 0 && <div className="w-full">
           <GoldTokenSelector
             maxGoldTokens={player.wallet.gold}
             onGoldTokensChange={(color, amount) => {
@@ -386,7 +386,7 @@ function PurchaseButton({ card, player }: { card: Card, player: Player }) {
             goldTokenUsage={goldTokenUsage}
             price={DropZeros(card.price)}
           />
-        </div>
+        </div>}
 
 
         <DialogFooter>
