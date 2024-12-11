@@ -348,6 +348,8 @@ function PurchaseButton({ card, player }: { card: Card, player: Player }) {
   const canPlayerAfford = CanPlayerAfford(player, priceAfterDiscount)
   const goldTokenCost = PriceSum(goldTokenUsage)
 
+  const priceAfterGoldTokens = ApplyGoldTokens(priceAfterDiscount, goldTokenUsage)
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -383,7 +385,7 @@ function PurchaseButton({ card, player }: { card: Card, player: Player }) {
                       : <MiniTokenDisplay tokens={
                         DropZeros({
                           'gold': goldTokenCost,
-                          ...ApplyGoldTokens(priceAfterDiscount, goldTokenUsage)
+                          ...priceAfterGoldTokens
                         })
                       } />
                   }
@@ -412,14 +414,14 @@ function PurchaseButton({ card, player }: { card: Card, player: Player }) {
           </DialogDescription>
         </div>
 
-        {player.wallet.gold > 0 && <div className="w-full">
+        {player.wallet.gold > 0 && !IsFree(priceAfterDiscount) && <div className="w-full">
           <GoldTokenSelector
             maxGoldTokens={player.wallet.gold}
             onGoldTokensChange={(color, amount) => {
               setGoldTokenUsage((prev) => ({ ...prev, [color]: amount }))
             }}
             goldTokenUsage={goldTokenUsage}
-            price={DropZeros(card.price)}
+            price={DropZeros(priceAfterDiscount)}
           />
         </div>}
 
