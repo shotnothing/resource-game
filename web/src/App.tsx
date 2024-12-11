@@ -464,9 +464,12 @@ type Card = {
   tier: string
 }
 
-function DeckCard({ tier }: { tier: string }) {
+function DeckCard({ tier, onClick = () => { } }: { tier: string, onClick?: () => void }) {
   return (
-    <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-r-4 border-b-4 border-t-0 border-l-0 border-muted-foreground/25">
+    <Card
+      className="bg-gradient-to-br from-primary/10 to-primary/5 border-r-4 border-b-4 border-t-0 border-l-0 border-muted-foreground/25"
+      onClick={onClick}
+    >
       <CardContent className="flex aspect-[3/4] items-center justify-center p-6">
         <div className="text-center">
           <div className="text-lg font-semibold">Tier {tier}</div>
@@ -491,7 +494,7 @@ function GameCard({
 
   return (
     <Card
-      className={cn("transition-all hover:scale-105 shadow-lg", isFocused && "scale-105 shadow-amber-500/50")}
+      className={cn("transition-all hover:scale-105 shadow-lg", isFocused && "scale-105 shadow-indigo-500/50")}
       onClick={() => setFocused(card.id)}
     >
       <CardContent className="flex flex-col aspect-[3/4] p-4 py-3">
@@ -559,7 +562,7 @@ function CardGrid({ focusedCard, setFocusedCard }: { focusedCard: number | null,
     <div className="grid grid-cols-5 gap-4">
       {["3", "2", "1"].map((tier) => (
         <>
-          <DeckCard key={`deck-${tier}`} tier={tier} />
+          <DeckCard key={`deck-${tier}`} tier={tier} onClick={() => setFocusedCard(null)} />
           {[0, 1, 2, 3].map((index) => {
             const deck = gameState.game.decks[tier as keyof typeof gameState.game.decks]
             const cardIndex = deck.visible[index]
@@ -846,8 +849,9 @@ function GameInterface() {
         className="flex h-full w-full overflow-hidden bg-background p-4"
       >
         {/* Left sidebar - Players */}
-        <div 
+        <div
           className="flex-shrink-0 mr-6 flex flex-col h-full"
+          onMouseDown={() => setFocusedCard(null)}
         >
           {/* Top section */}
           <div className="flex flex-col h-full space-y-5">
@@ -866,7 +870,10 @@ function GameInterface() {
           </div>
 
           {/* Anchored at the bottom */}
-          <div className="mt-auto w-full flex flex-row gap-2 ">
+          <div
+            className="mt-auto w-full flex flex-row gap-2 "
+            onMouseDown={() => setFocusedCard(null)}
+          >
             <WalletSection />
             <SettingsSection />
           </div>
@@ -874,8 +881,9 @@ function GameInterface() {
         </div>
 
         {/* Right sidebar */}
-        <div 
+        <div
           className="flex-shrink-0 ml-6 flex flex-col h-full space-y-5 overflow-hidden"
+          onMouseDown={() => setFocusedCard(null)}
         >
           <NoblesSection />
           <ReservationsSection />
