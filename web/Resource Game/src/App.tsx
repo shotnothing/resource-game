@@ -55,24 +55,24 @@ function MiniTokenDisplay({ tokens, dropZero = false }: { tokens: Record<string,
   } </>)
 }
 
-function MiniDiscountDisplay({ tokens, dropZero = false }: { tokens: Record<string, number>, dropZero?: boolean }) {
-  return (<>{
-    GetOrderedPrice(tokens).map(([color, amount]) => (
-      dropZero && amount == 0 ? <></> : <Badge
-        key={color}
-        className={
-          `${GetTokenColorScheme(color).verylight}
-           ${GetTokenColorScheme(color).border}
-           ${GetTokenColorScheme(color).text}
-           text-xs text-center h-5`
-        }
-        variant="outline"
-      >
-        {amount}
-      </Badge>
-    ))
-  } </>)
-}
+// function MiniDiscountDisplay({ tokens, dropZero = false }: { tokens: Record<string, number>, dropZero?: boolean }) {
+//   return (<>{
+//     GetOrderedPrice(tokens).map(([color, amount]) => (
+//       dropZero && amount == 0 ? <></> : <Badge
+//         key={color}
+//         className={
+//           `${GetTokenColorScheme(color).verylight}
+//            ${GetTokenColorScheme(color).border}
+//            ${GetTokenColorScheme(color).text}
+//            text-xs text-center h-5`
+//         }
+//         variant="outline"
+//       >
+//         {amount}
+//       </Badge>
+//     ))
+//   } </>)
+// }
 
 function MiniHoverDiscountHover({ color, player }: { color: string, player: Player }) {
   const filteredCardIndexes = player.developments.filter((index) => gameState.cards[index].discount == color)
@@ -140,7 +140,6 @@ function MiniHoverReservationCard({ card }: { card: Card }) {
 }
 
 function PlayerCard({ player }: { player: Player }) {
-  const score = GetPlayerScore(player)
   const totalDiscount = GetPlayerDiscount(player)
 
   const reservations = player.reservations.map((index) => gameState.cards[index])
@@ -323,17 +322,17 @@ function GetPlayerDiscount(player: Player) {
   });
 }
 
-function GetPriceAfterDiscount(
-  price: Record<string, number>,
-  discount: Record<string, number>
-): Record<string, number> {
-  const adjustedPrice: Record<string, number> = {};
-  for (const [color, amount] of Object.entries(price)) {
-    // Ensure we don't end up with negative values
-    adjustedPrice[color] = Math.max(0, amount - (discount[color] || 0));
-  }
-  return adjustedPrice;
-}
+// function GetPriceAfterDiscount(
+//   price: Record<string, number>,
+//   discount: Record<string, number>
+// ): Record<string, number> {
+//   const adjustedPrice: Record<string, number> = {};
+//   for (const [color, amount] of Object.entries(price)) {
+//     // Ensure we don't end up with negative values
+//     adjustedPrice[color] = Math.max(0, amount - (discount[color] || 0));
+//   }
+//   return adjustedPrice;
+// }
 
 function IsFree(price: Record<string, number>) {
   return Object.values(price).every(amount => amount === 0)
@@ -487,12 +486,12 @@ function GameCard({
   isFocused?: boolean,
   setFocused: (card: number) => void
 }) {
-  const discount = GetPlayerDiscount(currentPlayer)
-  const priceAfterDiscount = GetPriceAfterDiscount(card.price, discount)
+  // const discount = GetPlayerDiscount(currentPlayer)
+  // const priceAfterDiscount = GetPriceAfterDiscount(card.price, discount)
 
   return (
     <Card
-      className={cn("transition-all hover:scale-105 shadow-lg", isFocused && "scale-105 shadow-xl shadow-amber-500/50")}
+      className={cn("transition-all hover:scale-105 shadow-lg", isFocused && "scale-105 shadow-amber-500/50")}
       onClick={() => setFocused(card.id)}
     >
       <CardContent className="flex flex-col aspect-[3/4] p-4 py-3">
@@ -511,9 +510,9 @@ function GameCard({
         </div>
 
         <div className="flex items-center justify-center flex-col gap-4">
-          <div className="text-6xl font-bold">{GetArtFromCard(card).icon}</div>
-          <div className="text-md font-bold text-muted-foreground">{GetArtFromCard(card).name}</div>
-          {isFocused && (
+          <div className={cn("text-6xl font-bold", isFocused && "blur-sm")}>{GetArtFromCard(card).icon}</div>
+          <div className={cn("text-md font-bold text-muted-foreground", isFocused && "blur-sm")}>{GetArtFromCard(card).name}</div>
+          {isFocused && (<>
             <div className="flex flex-col gap-2 absolute inset-0 m-auto w-3/4 justify-center">
               <ActionButton
                 text="Reserve"
@@ -524,7 +523,7 @@ function GameCard({
                 className="w-11/12 max-w-[200px] opacity-95"
               />
             </div>
-          )}
+          </>)}
         </div>
 
         <div className="mt-auto">
@@ -555,9 +554,7 @@ function GameCard({
   );
 }
 
-function CardGrid() {
-  const [focusedCard, setFocusedCard] = useState<number | null>(null)
-
+function CardGrid({ focusedCard, setFocusedCard }: { focusedCard: number | null, setFocusedCard: (card: number) => void }) {
   return (
     <div className="grid grid-cols-5 gap-4">
       {["3", "2", "1"].map((tier) => (
@@ -614,8 +611,8 @@ function ActionButton({ text, className }: { text: string, className?: string })
 function ReservationCard({ card, isPurchasable = true }: { card: Card, isPurchasable: boolean }) {
   const art = GetArtFromCard(card)
 
-  const discount = GetPlayerDiscount(currentPlayer)
-  const priceAfterDiscount = GetPriceAfterDiscount(card.price, discount)
+  // const discount = GetPlayerDiscount(currentPlayer)
+  // const priceAfterDiscount = GetPriceAfterDiscount(card.price, discount)
 
   return (
     <Card className={`transition-colors hover:bg-muted/50 border-0 border-l-4 ${GetTokenColorScheme(card.discount).border} ${GetTokenColorScheme(card.discount).verylight}`}>
@@ -655,7 +652,7 @@ function ReservationsSection() {
       <CardContent className="px-4">
         <div className="space-y-3">
           {reservations.map((reservation) => (
-            <ReservationCard key={reservation.id} card={reservation} />
+            <ReservationCard key={reservation.id} card={reservation} isPurchasable={true} />
           ))}
         </div>
       </CardContent>
@@ -703,7 +700,18 @@ function NobleCard({ noble }: { noble: Noble }) {
 }
 
 function NoblesSection() {
-  const nobles = gameState.game.collections_in_play.map((index) => gameState.collections[index])
+  const nobles = gameState.game.collections_in_play.map((index) => {
+    const noble = gameState.collections[index];
+    // Ensure all keys are present in the trigger
+    const completeTrigger: Record<string, number> = {
+      black: noble.trigger.black || 0,
+      blue: noble.trigger.blue || 0,
+      green: noble.trigger.green || 0,
+      red: noble.trigger.red || 0,
+      white: noble.trigger.white || 0,
+    };
+    return { ...noble, trigger: completeTrigger };
+  });
 
   return (
     <Card>
@@ -711,20 +719,17 @@ function NoblesSection() {
         <CardTitle className="flex items-center gap-2">
           <PersonStanding className="h-5 w-5 text-muted-foreground text-yellow-500" />
           Nobles
-          {/* <div className="text-muted-foreground text-sm">(+3 Victory Points)</div> */}
         </CardTitle>
       </CardHeader>
       <CardContent>
-
         <div className="grid grid-cols-5 gap-2">
           {nobles.map((noble) => (
             <NobleCard key={noble.art} noble={noble} />
           ))}
         </div>
-
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function DevelopmentCard({ card }: { card: Card }) {
@@ -833,11 +838,17 @@ function SettingsSection() {
 
 
 function GameInterface() {
+  const [focusedCard, setFocusedCard] = useState<number | null>(null)
+
   return (
     <>
-      <div className="flex h-full w-full overflow-hidden bg-background p-4">
+      <div
+        className="flex h-full w-full overflow-hidden bg-background p-4"
+      >
         {/* Left sidebar - Players */}
-        <div className="flex-shrink-0 mr-6 flex flex-col h-full">
+        <div 
+          className="flex-shrink-0 mr-6 flex flex-col h-full"
+        >
           {/* Top section */}
           <div className="flex flex-col h-full space-y-5">
             <BankSection />
@@ -850,23 +861,22 @@ function GameInterface() {
         {/* Main content */}
         <div className="flex-1 flex-shrink-0 flex flex-col h-full">
 
-          <div className="flex-grow">
-            <CardGrid />
+          <div className="flex-grow no-select">
+            <CardGrid focusedCard={focusedCard} setFocusedCard={setFocusedCard} />
           </div>
 
           {/* Anchored at the bottom */}
           <div className="mt-auto w-full flex flex-row gap-2 ">
-
             <WalletSection />
-
             <SettingsSection />
-
           </div>
 
         </div>
 
         {/* Right sidebar */}
-        <div className="flex-shrink-0 ml-6 flex flex-col h-full space-y-5 overflow-hidden">
+        <div 
+          className="flex-shrink-0 ml-6 flex flex-col h-full space-y-5 overflow-hidden"
+        >
           <NoblesSection />
           <ReservationsSection />
           <div className="flex-1 overflow-hidden">

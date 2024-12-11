@@ -33,3 +33,10 @@
 .read-the-docs {
   color: #888;
 }
+
+.no-select {
+  user-select: none;          /* Standard */
+  -webkit-user-select: none;  /* For Safari/Chrome */
+  -moz-user-select: none;     /* For Firefox */
+  -ms-user-select: none;      /* For older IE/Edge */
+}
