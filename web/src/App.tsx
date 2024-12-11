@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge"
 import { BorderBeam } from "@/components/ui/border-beam"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
 import {
   HoverCard,
   HoverCardContent,
@@ -23,7 +25,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
-import { ChevronsRight, Coins, Crown, Flag, Gem, PersonStanding, Swords, Trophy } from 'lucide-react'
+import { AlertCircle, ChevronsRight, CreditCard, Coins, Crown, Flag, Gem, Gift, PersonStanding, Swords, Trophy } from 'lucide-react'
 import './App.css'
 
 import art from './art.json'
@@ -52,7 +54,10 @@ type Player = {
 
 
 
-export function Take2SameButton() {
+function Take2SameButton() {
+  const [selectedColor, setSelectedColor] = useState<string | null>(null)
+  const colors = ['white', 'black', 'red', 'green', 'blue']
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -63,22 +68,85 @@ export function Take2SameButton() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
+          <DialogTitle className="text-2xl font-bold">Take 2 Same-colored Tokens</DialogTitle>
         </DialogHeader>
+
+        <DialogDescription className="text-base space-y-2">
+          Take 2 tokens of the same color from the bank to your wallet.
+        </DialogDescription>
+
+        <div className={`grid grid-cols-2 gap-2`}>
+          {colors.map((color) => (
+            <div key={color} className={`flex items-center space-x-2 p-1 rounded-md 
+              ${GetTokenColorScheme(color).backgroundDark}
+              ${GetTokenColorScheme(color).border}
+              ${GetTokenColorScheme(color).text}
+            `}>
+              <Checkbox
+                id={color}
+                checked={color == selectedColor}
+                onCheckedChange={() => {
+                  selectedColor == color ? setSelectedColor(null) : setSelectedColor(color)
+                }}
+                className={`
+                  flex items-center justify-center
+                  data-[state=checked]:
+                  ${GetTokenColorScheme(color).verylight}
+                  ${GetTokenColorScheme(color).border}
+                  ${GetTokenColorScheme(color).text}
+                `}
+              />
+              <Label
+                htmlFor={color}
+                className={`capitalize`}
+              >
+                +2 {color}
+              </Label>
+            </div>
+          ))}
+        </div>
+
         <DialogFooter>
-          <Button type="submit">Commit Turn</Button>
+          <Button
+            type="submit"
+            className="relative"
+            variant="outline"
+            disabled={selectedColor == null}
+          >
+            Commit Turn
+            <ActionMarker />
+            {selectedColor && <BorderBeam size={50} duration={5} />}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   )
 }
 
-export function Take3DiffButton() {
+function Take3DiffButton() {
+  const [selectedColors, setSelectedColors] = useState<Record<string, boolean>>({
+    white: false,
+    black: false,
+    red: false,
+    green: false,
+    blue: false,
+  });
+
+  const handleColorChange = (color: string) => {
+    setSelectedColors(prev => {
+      const newSelection = { ...prev, [color]: !prev[color] };
+      const selectedCount = Object.values(newSelection).filter(Boolean).length;
+      if (selectedCount > 3) {
+        return prev;
+      }
+      return newSelection;
+    });
+  };
+
+  const selectedCount = Object.values(selectedColors).filter(Boolean).length;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -89,26 +157,68 @@ export function Take3DiffButton() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
+          <DialogTitle className="text-2xl font-bold">Take 3 Different-colored Tokens</DialogTitle>
         </DialogHeader>
+
+        <DialogDescription className="text-base space-y-2">
+          Take 3 different tokens from the bank to your wallet.
+          The colors chosen must be unique.
+        </DialogDescription>
+
+        <div className={`grid grid-cols-2 gap-2`}>
+          {Object.entries(selectedColors).map(([color, isSelected]) => (
+            <div key={color} className={`flex items-center space-x-2 p-1 rounded-md 
+              ${GetTokenColorScheme(color).backgroundDark}
+              ${GetTokenColorScheme(color).border}
+              ${GetTokenColorScheme(color).text}
+            `}>
+              <Checkbox
+                id={color}
+                checked={isSelected}
+                onCheckedChange={() => handleColorChange(color)}
+                disabled={!isSelected && selectedCount >= 3}
+                className={`
+                  flex items-center justify-center
+                  data-[state=checked]:
+                  ${GetTokenColorScheme(color).verylight}
+                  ${GetTokenColorScheme(color).border}
+                  ${GetTokenColorScheme(color).text}
+                `}
+              />
+              <Label
+                htmlFor={color}
+                className={`capitalize`}
+              >
+                +1 {color}
+              </Label>
+            </div>
+          ))}
+        </div>
+
         <DialogFooter>
-          <Button type="submit">Commit Turn</Button>
+          <Button
+            type="submit"
+            className="relative"
+            variant="outline"
+            disabled={selectedCount !== 3}
+          >
+            Commit Turn
+            <ActionMarker />
+            {selectedCount == 3 && <BorderBeam size={50} duration={5} />}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   )
 }
 
-export function ReserveButton() {
+function ReserveButton() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-      <Button
+        <Button
           className={`px-2 h-8 ml-3 relative w-11/12`}
           variant="outline"
         >
@@ -117,23 +227,112 @@ export function ReserveButton() {
           <BorderBeam size={50} duration={5} />
         </Button>
       </DialogTrigger>
-
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
+          <DialogTitle className="text-2xl font-bold">Reserve this card</DialogTitle>
         </DialogHeader>
+
+        <div>
+          <DialogDescription className="text-base space-y-2">
+            <div className="flex items-center text-muted-foreground dark:bg-amber-900 p-3 rounded-md">
+              <CreditCard className="mr-4 h-8 w-8 text-muted-foreground" />
+              <span>
+                This card will be reserved for you to purchase later, at a time of your choosing (or never).
+              </span>
+            </div>
+
+            <div className="flex items-center text-muted-foreground dark:bg-amber-900 p-3 rounded-md">
+              <AlertCircle className="mr-4 h-8 w-8 text-muted-foreground" />
+              <span>
+                You can reserve up to 3 cards. Purchasing reserved cards will free up reservation slots.
+              </span>
+            </div>
+
+            <div className="flex items-center bg-amber-100 dark:bg-amber-900 p-3 rounded-md">
+              <Gift className="mr-4 h-8 w-8 text-amber-500" />
+              <span>
+                You will receive a <span className="text-amber-500 font-bold">gold token</span>, which can substitute for a token of any color.
+              </span>
+            </div>
+          </DialogDescription>
+        </div>
+
         <DialogFooter>
-          <Button type="submit">Commit Turn</Button>
+          <Button type="submit" className="relative" variant="outline">
+            Commit Turn
+            <ActionMarker />
+            <BorderBeam size={50} duration={5} />
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   )
 }
 
-export function PurchaseButton() {
+function DropZeros(price: Record<string, number>) {
+  return Object.fromEntries(Object.entries(price).filter(([color, amount]) => amount > 0))
+}
+
+function GoldTokenSelector({ 
+  maxGoldTokens, 
+  price,
+  onGoldTokensChange,
+  goldTokenUsage,
+}: {
+  maxGoldTokens: number,
+  price: Record<string, number>,
+  onGoldTokensChange: (color: string, amount: number) => void,
+  goldTokenUsage: Record<string, number>
+}) {
+  console.log('test', price)
+  const totalUsed = Object.values(goldTokenUsage).reduce((sum, amount) => sum + amount, 0)
+  return (
+    <div className="space-y-2">
+      <div className="flex justify-between items-center">
+        <span>Use <span className="text-amber-500 font-bold">gold tokens</span>: </span>
+        <Badge variant="outline" className="bg-amber-100 text-amber-900">
+          {maxGoldTokens - totalUsed} left
+        </Badge>
+      </div>
+      <div className="flex flex-row gap-2 justify-center">
+        {Object.keys(price).map((color) => (
+          <div key={color} className="flex flex-col items-center">
+            <div className="flex items-center">
+              <Input
+                type="number"
+                value={goldTokenUsage[color]}
+                onChange={(e) => onGoldTokensChange(color, parseInt(e.target.value))}
+                className={`
+                  ${GetTokenColorScheme(color).verylight} 
+                  ${GetTokenColorScheme(color).border}
+                  ${GetTokenColorScheme(color).text}
+                  text-center`}
+                min={0}
+                max={
+                  Math.min(
+                    maxGoldTokens - totalUsed + goldTokenUsage[color],
+                    price[color]
+                  )
+                }
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+
+function PurchaseButton({ card, player }: { card: Card, player: Player }) {
+  const [goldTokenUsage, setGoldTokenUsage] = useState({
+    white: 0,
+    black: 0,
+    red: 0,
+    green: 0,
+    blue: 0,
+  })
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -147,50 +346,60 @@ export function PurchaseButton() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        // TODO: Focus on the commit button first, instead of just disabling auto focus
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
+          <DialogTitle className="text-2xl font-bold">Purchase this card</DialogTitle>
         </DialogHeader>
+
+        <div>
+          <DialogDescription className="text-base space-y-2">
+            <div className="flex items-center text-muted-foreground dark:bg-amber-900 p-3 rounded-md">
+              <CreditCard className="mr-4 h-4 w-4 text-muted-foreground" />
+              <div className="flex flex-col gap-2">
+                <span>
+                  This card will be added to your developments at the cost of <MiniTokenDisplay tokens={
+                    DropZeros(ApplyGoldTokens(card.price, goldTokenUsage))
+                  } /> tokens
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center bg-muted dark:bg-amber-900 p-3 rounded-md">
+              <Trophy className="mr-4 h-4 w-4 text-muted-foreground" />
+              <span>
+                You will recieve <span className="text-muted-foreground font-bold">{card.score}</span> victory points from this purchase.
+              </span>
+            </div>
+          </DialogDescription>
+        </div>
+
+        <div className="w-full">
+          <GoldTokenSelector
+            maxGoldTokens={player.wallet.gold}
+            onGoldTokensChange={(color, amount) => {
+              setGoldTokenUsage((prev) => ({ ...prev, [color]: amount }))
+            }}
+            goldTokenUsage={goldTokenUsage}
+            price={DropZeros(card.price)}
+          />
+        </div>
+
+
         <DialogFooter>
-          <Button type="submit">Commit Turn</Button>
+          <Button type="submit" className="relative" variant="outline">
+            Commit Turn
+            <ActionMarker />
+            <BorderBeam size={50} duration={5} />
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   )
 }
-
-export function SmallPurchaseButton() {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          className={`px-2 h-8 ml-3 relative w-11/12 `}
-          variant="outline"
-        >
-          <ActionMarker />
-          {'Purchase'}
-          <BorderBeam size={50} duration={5} />
-        </Button>
-      </DialogTrigger>
-
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button type="submit">Commit Turn</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
 
 
 
@@ -388,6 +597,7 @@ const tokenColorScheme: Record<string, Record<string, string>> = {
     'text': 'text-slate-900',
     'textlight': 'text-slate-400',
     'border': 'border-slate-300',
+    'checked': 'bg-slate-700',
   },
   'Black': {
     'verylight': 'bg-stone-100',
@@ -397,6 +607,7 @@ const tokenColorScheme: Record<string, Record<string, string>> = {
     'text': 'text-stone-950',
     'textlight': 'text-stone-600',
     'border': 'border-stone-600',
+    'checked': 'bg-stone-700',
   },
   'Red': {
     'verylight': 'bg-red-100',
@@ -406,6 +617,7 @@ const tokenColorScheme: Record<string, Record<string, string>> = {
     'text': 'text-red-950',
     'textlight': 'text-red-500',
     'border': 'border-red-400',
+    'checked': 'bg-red-700',
   },
   'Green': {
     'verylight': 'bg-emerald-100',
@@ -415,6 +627,7 @@ const tokenColorScheme: Record<string, Record<string, string>> = {
     'text': 'text-emerald-950',
     'textlight': 'text-emerald-500',
     'border': 'border-emerald-400',
+    'checked': 'bg-emerald-700',
   },
   'Blue': {
     'verylight': 'bg-blue-100',
@@ -424,6 +637,7 @@ const tokenColorScheme: Record<string, Record<string, string>> = {
     'text': 'text-blue-950',
     'textlight': 'text-blue-500',
     'border': 'border-blue-400',
+    'checked': 'bg-blue-700',
   },
   'Gold': {
     'verylight': 'bg-amber-100',
@@ -433,6 +647,7 @@ const tokenColorScheme: Record<string, Record<string, string>> = {
     'text': 'text-amber-950',
     'textlight': 'text-amber-500',
     'border': 'border-amber-400',
+    'checked': 'bg-amber-700',
   },
 }
 
@@ -496,6 +711,12 @@ function IsFree(price: Record<string, number>) {
 
 function ActionMarker() {
   return <ChevronsRight className="h-4 w-4 text-indigo-500" />
+}
+
+function ApplyGoldTokens(price: Record<string, number>, subtractions: Record<string, number>): Record<string, number> {
+  return Object.fromEntries(
+    Object.entries(price).map(([color, amount]) => [color, amount - subtractions[color]])
+  );
 }
 
 function BankSection() {
@@ -662,7 +883,7 @@ function GameCard({
           <div className={cn("text-md font-bold text-muted-foreground", isFocused && "blur-sm")}>{GetArtFromCard(card).name}</div>
           {isFocused && (<>
             <div className="flex flex-col gap-2 absolute inset-0 m-auto w-3/4 justify-center">
-              <PurchaseButton />
+              <PurchaseButton card={card} player={currentPlayer} />
               <ReserveButton />
             </div>
           </>)}
@@ -754,8 +975,8 @@ function ReservationCard({ card, isPurchasable = true }: { card: Card, isPurchas
           <div className="flex justify-between gap-1">
             <PriceDisplay price={card.price} />
 
-            {isPurchasable && <PurchaseButton />}
-            
+            {isPurchasable && <PurchaseButton card={card} player={currentPlayer} />}
+
             {/* Make PriceDisplay not stacked
             <div className="flex flex-col items-center gap-1">
               {isPurchasable && <PurchaseButton />}
@@ -806,7 +1027,7 @@ type Noble = {
 function NobleCard({ noble }: { noble: Noble }) {
   const art = GetArtFromNoble(noble)
   return (
-    <Card>
+    <Card className="hover:scale-105 transition-all">
       <CardContent className="flex flex-col items-center justify-center py-2 px-2">
 
         <div className="flex flex-col gap-3">
