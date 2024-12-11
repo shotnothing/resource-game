@@ -646,11 +646,17 @@ function ReservationsSection() {
   return (
     <Card>
       <CardHeader className="py-5">
-        <CardTitle className="flex items-center gap-2">
-          <Flag className="h-5 w-5 text-muted-foreground" />
-          Reservations
-          <div className="text-muted-foreground">({GetDisplayName()})</div>
-        </CardTitle>
+
+        <div className="flex flex-row justify-between  items-center">
+          <CardTitle className="flex items-center gap-2">
+            <Flag className="h-5 w-5 text-muted-foreground" />
+            Reservations
+            <div className="text-muted-foreground">({GetDisplayName()})</div>
+          </CardTitle>
+
+          <div className="font-semibold text-muted-foreground">Maximum 3</div>
+        </div>
+
       </CardHeader>
       <CardContent className="px-4">
         <div className="space-y-3">
@@ -816,7 +822,7 @@ function DevelopmentsSection() {
 
         <ScrollArea className="flex-1">
           <div className="space-y-3 pr-4">
-            {developments.map((development) => (
+            {developments.reverse().map((development) => (
               <DevelopmentCard key={development.id} card={development} />
             ))}
           </div>
