@@ -1402,10 +1402,10 @@
                 "wallet": {
                     "black": 0,
                     "blue": 1,
-                    "gold": 0,
-                    "green": 1,
-                    "red": 2,
-                    "white": 3
+                    "gold": 2,
+                    "green": 0,
+                    "red": 3,
+                    "white": 4
                 }
             },
             "Bob": {

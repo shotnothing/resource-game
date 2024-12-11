@@ -25,7 +25,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
-import { AlertCircle, ChevronsRight, CreditCard, Coins, Crown, Flag, Gem, Gift, PersonStanding, Swords, Trophy } from 'lucide-react'
+import { AlertCircle, ChevronsRight, CreditCard, Coins, Crown, Flag, Gem, Gift, PersonStanding, Swords, Trophy, Ticket } from 'lucide-react'
 import './App.css'
 
 import art from './art.json'
@@ -49,6 +49,15 @@ type Player = {
   wallet: Record<string, number>
 }
 
+
+import { create } from 'zustand'
+const useBoardSettingsStore = create<{
+  viewDiscountedPrices: boolean
+  setViewDiscountedPrices: (viewDiscountedPrices: boolean) => void
+}>((set) => ({
+  viewDiscountedPrices: false,
+  setViewDiscountedPrices: (viewDiscountedPrices: boolean) => set({ viewDiscountedPrices }),
+}))
 
 
 
@@ -273,8 +282,8 @@ function DropZeros(price: Record<string, number>) {
   return Object.fromEntries(Object.entries(price).filter(([color, amount]) => amount > 0))
 }
 
-function GoldTokenSelector({ 
-  maxGoldTokens, 
+function GoldTokenSelector({
+  maxGoldTokens,
   price,
   onGoldTokensChange,
   goldTokenUsage,
@@ -333,16 +342,23 @@ function PurchaseButton({ card, player }: { card: Card, player: Player }) {
     blue: 0,
   })
 
+  const discount = GetPlayerDiscount(currentPlayer)
+  const priceAfterDiscount = GetPriceAfterDiscount(card.price, discount)
+
+  const canPlayerAfford = CanPlayerAfford(player, priceAfterDiscount)
+  const goldTokenCost = PriceSum(goldTokenUsage)
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button
           className={`px-2 h-8 ml-3 relative w-11/12`}
           variant="outline"
+          disabled={!canPlayerAfford}
         >
           <ActionMarker />
           {'Purchase'}
-          <BorderBeam size={50} duration={5} />
+          {canPlayerAfford && <BorderBeam size={50} duration={5} />}
         </Button>
       </DialogTrigger>
 
@@ -361,19 +377,38 @@ function PurchaseButton({ card, player }: { card: Card, player: Player }) {
               <CreditCard className="mr-4 h-4 w-4 text-muted-foreground" />
               <div className="flex flex-col gap-2">
                 <span>
-                  This card will be added to your developments at the cost of <MiniTokenDisplay tokens={
-                    DropZeros(ApplyGoldTokens(card.price, goldTokenUsage))
-                  } /> tokens
+                  This card will be added to your developments at the cost of {
+                    IsFree(priceAfterDiscount)
+                      ? <RainbowText className='font-semibold' text='Free! ' />
+                      : <MiniTokenDisplay tokens={
+                        DropZeros({
+                          'gold': goldTokenCost,
+                          ...ApplyGoldTokens(priceAfterDiscount, goldTokenUsage)
+                        })
+                      } />
+                  }
+                  tokens
                 </span>
               </div>
             </div>
 
             <div className="flex items-center bg-muted dark:bg-amber-900 p-3 rounded-md">
+              <Ticket className="mr-4 h-4 w-4 text-muted-foreground" />
+              <span>
+                You will attain a
+                <span className={`${GetTokenColorScheme(card.discount).textlight} font-semibold`}>{` -1 `}</span>
+                discount on any
+                <span className={`${GetTokenColorScheme(card.discount).textlight} font-semibold`}>{` ${card.discount} `}</span>
+                token purchase in the future.
+              </span>
+            </div>
+
+            {card.score > 0 && <div className="flex items-center bg-muted dark:bg-amber-900 p-3 rounded-md">
               <Trophy className="mr-4 h-4 w-4 text-muted-foreground" />
               <span>
                 You will recieve <span className="text-muted-foreground font-bold">{card.score}</span> victory points from this purchase.
               </span>
-            </div>
+            </div>}
           </DialogDescription>
         </div>
 
@@ -693,17 +728,17 @@ function GetPlayerDiscount(player: Player) {
   });
 }
 
-// function GetPriceAfterDiscount(
-//   price: Record<string, number>,
-//   discount: Record<string, number>
-// ): Record<string, number> {
-//   const adjustedPrice: Record<string, number> = {};
-//   for (const [color, amount] of Object.entries(price)) {
-//     // Ensure we don't end up with negative values
-//     adjustedPrice[color] = Math.max(0, amount - (discount[color] || 0));
-//   }
-//   return adjustedPrice;
-// }
+function GetPriceAfterDiscount(
+  price: Record<string, number>,
+  discount: Record<string, number>
+): Record<string, number> {
+  const adjustedPrice: Record<string, number> = {};
+  for (const [color, amount] of Object.entries(price)) {
+    // Ensure we don't end up with negative values
+    adjustedPrice[color] = Math.max(0, amount - (discount[color] || 0));
+  }
+  return adjustedPrice;
+}
 
 function IsFree(price: Record<string, number>) {
   return Object.values(price).every(amount => amount === 0)
@@ -717,6 +752,43 @@ function ApplyGoldTokens(price: Record<string, number>, subtractions: Record<str
   return Object.fromEntries(
     Object.entries(price).map(([color, amount]) => [color, amount - subtractions[color]])
   );
+}
+
+function PriceSubtraction(price: Record<string, number>, subtractions: Record<string, number>): Record<string, number> {
+  return Object.fromEntries(
+    Object.entries(price).map(([color, amount]) => [color, amount - subtractions[color]])
+  );
+}
+
+function PriceSum(price: Record<string, number>): number {
+  return Object.values(price).reduce((acc, amount) => amount ? acc + amount : acc, 0);
+}
+
+function WalletOnlyNegativeValues(wallet: Record<string, number>): Record<string, number> {
+  return Object.fromEntries(
+    Object.entries(wallet).map(([color, amount]) => [color, amount < 0 ? amount : 0])
+  );
+}
+
+function CanPlayerAfford(player: Player, priceAfterDiscount: Record<string, number>) {
+  const finalWallet = PriceSubtraction(player.wallet, priceAfterDiscount)
+  const walletDeficit = WalletOnlyNegativeValues(finalWallet)
+
+  const numberOfGoldTokens = player.wallet.gold
+  const goldTokenCost = -PriceSum(walletDeficit)
+
+  console.log(
+    {
+      'player.wallet': player.wallet,
+      'priceAfterDiscount': priceAfterDiscount,
+      'finalWallet': finalWallet,
+      'walletDeficit': walletDeficit,
+      'numberOfGoldTokens': numberOfGoldTokens,
+      'goldTokenCost': goldTokenCost,
+    }, numberOfGoldTokens, goldTokenCost
+  )
+
+  return numberOfGoldTokens >= goldTokenCost
 }
 
 function BankSection() {
@@ -849,14 +921,16 @@ function DeckCard({ tier, onClick = () => { } }: { tier: string, onClick?: () =>
 function GameCard({
   card,
   isFocused = false,
-  setFocused = () => { }
+  setFocused = () => { },
 }: {
   card: Card,
   isFocused?: boolean,
-  setFocused: (card: number) => void
+  setFocused: (card: number) => void,
 }) {
-  // const discount = GetPlayerDiscount(currentPlayer)
-  // const priceAfterDiscount = GetPriceAfterDiscount(card.price, discount)
+  const { viewDiscountedPrices } = useBoardSettingsStore()
+
+  const discount = GetPlayerDiscount(currentPlayer)
+  const priceAfterDiscount = GetPriceAfterDiscount(card.price, discount)
 
   return (
     <Card
@@ -893,11 +967,11 @@ function GameCard({
 
           <div className="flex flex-row gap-1">
             <div className="text-sm text-muted-foreground font-semibold">Price:</div>
-            {IsFree(card.price) ? <RainbowText text="Free!" className="text-sm font-bold" /> : <></>}
+            {IsFree(viewDiscountedPrices ? priceAfterDiscount : card.price) ? <RainbowText text="Free!" className="text-sm font-bold" /> : <></>}
           </div>
 
           <div className="grid grid-cols-4 gap-2 no-select">
-            {GetOrderedPrice(card.price).map(([color, amount]) => (
+            {GetOrderedPrice(viewDiscountedPrices ? priceAfterDiscount : card.price).map(([color, amount]) => (
               amount > 0 && (
                 <Badge
                   key={color}
@@ -956,10 +1030,11 @@ function PriceDisplay({ price }: { price: Record<string, number> }) {
 }
 
 function ReservationCard({ card, isPurchasable = true }: { card: Card, isPurchasable: boolean }) {
+  const { viewDiscountedPrices } = useBoardSettingsStore()
   const art = GetArtFromCard(card)
 
-  // const discount = GetPlayerDiscount(currentPlayer)
-  // const priceAfterDiscount = GetPriceAfterDiscount(card.price, discount)
+  const discount = GetPlayerDiscount(currentPlayer)
+  const priceAfterDiscount = GetPriceAfterDiscount(card.price, discount)
 
   return (
     <Card className={`transition-colors hover:bg-muted/50 border-0 border-l-4 ${GetTokenColorScheme(card.discount).border} ${GetTokenColorScheme(card.discount).verylight}`}>
@@ -973,7 +1048,7 @@ function ReservationCard({ card, isPurchasable = true }: { card: Card, isPurchas
           </div>
 
           <div className="flex justify-between gap-1">
-            <PriceDisplay price={card.price} />
+            <PriceDisplay price={viewDiscountedPrices ? priceAfterDiscount : card.price} />
 
             {isPurchasable && <PurchaseButton card={card} player={currentPlayer} />}
 
@@ -1184,12 +1259,14 @@ function DevelopmentsSection() {
 }
 
 function SettingsSection() {
+  const { viewDiscountedPrices, setViewDiscountedPrices } = useBoardSettingsStore()
+
   return (
     <Card className="p-4">
       <CardContent className="text-muted-foreground">
 
         <div className="flex items-center space-x-2">
-          <Switch id="airplane-mode" className="data-[state=checked]:bg-muted-foreground" />
+          <Switch id="airplane-mode" className="data-[state=checked]:bg-muted-foreground" checked={viewDiscountedPrices} onCheckedChange={setViewDiscountedPrices} />
           <Label htmlFor="airplane-mode">View Discounted Prices</Label>
         </div>
 
