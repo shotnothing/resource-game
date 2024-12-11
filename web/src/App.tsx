@@ -98,7 +98,7 @@ function MiniHoverDiscountDisplay({ tokens, player }: { tokens: Record<string, n
               `${GetTokenColorScheme(color).verylight}
            ${GetTokenColorScheme(color).border}
            ${GetTokenColorScheme(color).text}
-           text-xs text-center h-5`
+           text-xs text-center h-5 no-select`
             }
             variant="outline"
           >
@@ -166,7 +166,7 @@ function PlayerCard({ player }: { player: Player }) {
                 <div className="flex flex-row items-center gap-2">
                   <p className="text-sm font-semibold text-muted-foreground">Wallet:</p>
 
-                  <div className="flex flex-row gap-1">
+                  <div className="flex flex-row gap-1 no-select">
                     <MiniTokenDisplay tokens={player.wallet} />
                   </div>
                 </div>
@@ -533,7 +533,7 @@ function GameCard({
             {IsFree(card.price) ? <RainbowText text="Free!" className="text-sm font-bold" /> : <></>}
           </div>
 
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-2 no-select">
             {GetOrderedPrice(card.price).map(([color, amount]) => (
               amount > 0 && (
                 <Badge
@@ -574,7 +574,7 @@ function CardGrid({ focusedCard, setFocusedCard }: { focusedCard: number | null,
 
 function PriceDisplay({ price }: { price: Record<string, number> }) {
   return (
-    <div className="grid grid-cols-4 gap-1 items-center">
+    <div className="grid grid-cols-4 gap-1 items-center no-select">
       {GetOrderedPrice(price).map(([color, amount]) => (
         amount > 0 && (
           <Badge
@@ -679,7 +679,7 @@ function NobleCard({ noble }: { noble: Noble }) {
             <div className="text-5xl text-muted-foreground">{art.icon}</div>
           </div>
 
-          <div className="grid grid-cols-2 items-center justify-center gap-1">
+          <div className="grid grid-cols-2 items-center justify-center gap-1 no-select">
             {GetOrderedPrice(noble.trigger).map(([color, amount]) => (
               <Badge
                 key={color}
@@ -785,7 +785,7 @@ function DevelopmentsSection() {
         <div className="flex flex-col gap-3 mb-3">
           <div className="flex flex-row gap-4 items-center">
             <div className="text-md font-semibold text-muted-foreground">Total Discount: </div>
-            <div className="flex flex-row gap-1">
+            <div className="flex flex-row gap-1 no-select">
               {GetOrderedPrice(totalDiscount).map(([color, amount]) => (
                 <Badge
                   key={color}
