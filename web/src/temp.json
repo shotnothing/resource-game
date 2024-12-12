@@ -1397,15 +1397,15 @@
         "players": {
             "Alice": {
                 "attained_collection": null,
-                "developments": [43, 12, 89, 12, 57, 15, 43, 68, 24],
+                "developments": [43, 12, 89, 57, 15, 68, 24],
                 "reservations": [25, 49, 72],
                 "wallet": {
                     "black": 0,
                     "blue": 1,
-                    "gold": 2,
-                    "green": 0,
-                    "red": 3,
-                    "white": 4
+                    "gold": 1,
+                    "green": 1,
+                    "red": 2,
+                    "white": 3
                 }
             },
             "Bob": {
