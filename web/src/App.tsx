@@ -304,7 +304,7 @@ function GoldTokenSelector({
         </Badge>
       </div>
       <div className="flex flex-row gap-2 justify-center">
-        {Object.keys(price).map((color) => (
+        {GetOrderedPrice(price).map(([color, amount]) => (
           <div key={color} className="flex flex-col items-center">
             <div className="flex items-center">
               <Input
