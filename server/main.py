@@ -140,6 +140,14 @@ async def websocket_endpoint(websocket: WebSocket):
                 continue
 
             try:
+                if not os.path.exists('./core/cards.json'):
+                    await manager.send_error(websocket, f"Server Error: ./core/cards.json does not exist.")
+                    continue
+                
+                if not os.path.exists('./core/collections.json'):
+                    await manager.send_error(websocket, f"Server Error: ./core/collections.json does not exist.")
+                    continue
+                
                 games[room_name] = games[room_name].begin('./core/cards.json', './core/collections.json')
             except Exception as e:
                 await manager.send_error(websocket, f"Error beginning game: {e}")
