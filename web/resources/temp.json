@@ -1,0 +1,26 @@
+{
+    "game": {
+        "players": {
+            "Alice": {
+                "name": "Alice",
+                "attained_collection": null,
+                "developments": [],
+                "reservations": [],
+                "wallet": {
+                    "black": 0,
+                    "blue": 0,
+                    "gold": 0,
+                    "green": 0,
+                    "red": 0,
+                    "white": 0
+                },
+                "nobles": []
+            }
+            // Add more players as needed
+        },
+        "decks": {},
+        "turn": 0
+        // ... other game state properties ...
+    },
+    "cards": {}
+} 

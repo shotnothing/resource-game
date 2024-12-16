@@ -1,27 +1,27 @@
 import { create } from 'zustand'
 import { GameState, Player, Noble } from '@/game/types'
 
-import defaultGameState from '@/temp.json'
-const currentPlayerName = Object.keys(defaultGameState.game.players)[0] as keyof typeof defaultGameState.game.players
-const currentPlayer = { name: currentPlayerName, ...defaultGameState.game.players[currentPlayerName] }
-const yourName = "Alice"
+import defaultGameState from '@/resources/temp.json'
+const defaultCurrentPlayerName = "Alice";
+const defaultYourName = "Alice"
+const defaultRoomName = "testRoom"
 
 export const useGameStore = create<{
   gameState: GameState
   setGameState: (gameState: GameState) => void
 
-  currentPlayer: Player
-  setCurrentPlayer: (currentPlayer: Player) => void
-
   yourName: string
   setYourName: (yourName: string) => void
+
+  roomName: string
+  setRoomName: (roomName: string) => void
 }>((set) => ({
     gameState: defaultGameState,
-    setGameState: (gameState: GameState) => set({ gameState }),
+    setGameState: (newState: GameState) => set({ gameState: newState }),
 
-    currentPlayer: currentPlayer,
-    setCurrentPlayer: (currentPlayer: Player) => set({ currentPlayer }),
-
-    yourName: yourName,
+    yourName: defaultYourName,
     setYourName: (yourName: string) => set({ yourName }),
+
+    roomName: defaultRoomName,
+    setRoomName: (roomName: string) => set({ roomName }),
 }))

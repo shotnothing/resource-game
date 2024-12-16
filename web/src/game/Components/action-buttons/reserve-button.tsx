@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { CreditCard, AlertCircle, Gift } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -12,11 +13,15 @@ import {
 } from "@/components/ui/dialog"
 import { BorderBeam } from "@/components/ui/border-beam"
 
+import { GameCard } from "@/game/types"
 import ActionMarker from "@/game/Components/action-buttons/action-marker"
+import { DoActionType } from '@/hooks/use-websocket'
 
-export default function ReserveButton() {
+export default function ReserveButton({ card, doAction }: { card: GameCard, doAction: DoActionType }) {
+    const [dialogOpen, setDialogOpen] = useState(false);
+
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
           <Button
             className={`px-2 h-8 ml-3 relative w-11/12`}
@@ -58,7 +63,15 @@ export default function ReserveButton() {
           </div>
   
           <DialogFooter>
-            <Button type="submit" className="relative" variant="outline">
+            <Button type="submit" className="relative" variant="outline"
+              onClick={() => {
+                doAction('reserve', { 
+                  tier: '1', // Tier should be ignored if card_id is provided
+                  card_id: card.id 
+                });
+                setDialogOpen(false);
+              }}
+            >
               Commit Turn
               <ActionMarker />
               <BorderBeam size={50} duration={5} />

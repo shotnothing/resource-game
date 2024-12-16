@@ -10,9 +10,18 @@ import RainbowText from "@/game/Components/rainbow-text"
 import { Badge } from "@/components/ui/badge"
 import { useBoardSettingsStore } from "@/game/Store/board-settings-store"
 import { GetArtFromCard } from "@/game/art"
+import { DoActionType } from "@/hooks/use-websocket"
 
 
-export function DeckCard({ tier, onClick = () => { } }: { tier: string, onClick?: () => void }) {
+export function DeckCard({
+    tier,
+    doAction,
+    onClick = () => { }
+}: {
+    tier: string,
+    doAction: DoActionType,
+    onClick?: () => void
+}) {
     const gameState = useGameStore.getState().gameState
     return (
         <Card
@@ -31,17 +40,23 @@ export function DeckCard({ tier, onClick = () => { } }: { tier: string, onClick?
 
 export function GameCard({
     card,
+    doAction,
     isFocused = false,
     setFocused = () => { },
-
 }: {
     card: GameCardType,
+    doAction: DoActionType,
     isFocused?: boolean,
     setFocused: (card: number) => void,
 }) {
+    const { gameState, yourName } = useGameStore();
+    const currentPlayer = gameState.game.players[yourName];
+
     const { viewDiscountedPrices } = useBoardSettingsStore()
-    const gameState = useGameStore.getState().gameState
-    const currentPlayer = useGameStore.getState().currentPlayer
+
+    if (!currentPlayer) {
+        return <div>Loading...</div>;
+    }
 
     const discount = GetPlayerDiscount(currentPlayer, gameState.cards)
     const priceAfterDiscount = GetPriceAfterDiscount(card.price, discount)
@@ -71,8 +86,8 @@ export function GameCard({
                     <div className={cn("text-md font-bold text-muted-foreground", isFocused && "blur-sm")}>{GetArtFromCard(card).name}</div>
                     {isFocused && (<>
                         <div className="flex flex-col gap-2 absolute inset-0 m-auto w-3/4 justify-center">
-                            <PurchaseButton card={card} player={currentPlayer} />
-                            <ReserveButton />
+                            <PurchaseButton card={card} player={currentPlayer} doAction={doAction} />
+                            <ReserveButton card={card} doAction={doAction} />
                         </div>
                     </>)}
                 </div>
@@ -105,19 +120,27 @@ export function GameCard({
     );
 }
 
-export default function CardGrid({ focusedCard, setFocusedCard }: { focusedCard: number | null, setFocusedCard: (card: number) => void }) {
+export default function CardGrid({
+    focusedCard,
+    setFocusedCard,
+    doAction
+}: {
+    focusedCard: number | null,
+    setFocusedCard: (card: number) => void,
+    doAction: DoActionType
+}) {
     const gameState = useGameStore.getState().gameState
 
     return (
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid grid-cols-5 gap-4 p-4 rounded-lg">
             {["3", "2", "1"].map((tier) => (
                 <>
-                    <DeckCard key={`deck-${tier}`} tier={tier} onClick={() => setFocusedCard(-1)} />
+                    <DeckCard key={`deck-${tier}`} tier={tier} onClick={() => setFocusedCard(-1)} doAction={doAction} />
                     {[0, 1, 2, 3].map((index) => {
                         const deck = gameState.game.decks[tier as keyof typeof gameState.game.decks]
                         const cardIndex = deck.visible[index]
                         const card = gameState.cards[cardIndex]
-                        return <GameCard key={`card-${tier}-${index}`} card={card} isFocused={focusedCard === cardIndex} setFocused={setFocusedCard} />
+                        return <GameCard key={`card-${tier}-${index}`} card={card} isFocused={focusedCard === cardIndex} setFocused={setFocusedCard} doAction={doAction} />
                     })}
                 </>
             ))}

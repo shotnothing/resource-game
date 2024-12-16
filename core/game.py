@@ -606,9 +606,12 @@ class Game:
         
         if not self.began:
             return out
+    
         
         # Don't show the hidden decks
         for tier in out["decks"]:
+            # Count number of cards that are hidden
+            out["decks"][tier]["hidden_count"] = len(out["decks"][tier]["hidden"])
             out["decks"][tier].pop("hidden")
             
         # Don't show the card glossary

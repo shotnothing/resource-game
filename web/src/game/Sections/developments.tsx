@@ -36,9 +36,12 @@ export function DevelopmentCard({ card }: { card: GameCard }) {
 }
 
 export default function DevelopmentsSection() {
-    const gameState = useGameStore.getState().gameState
-    const currentPlayer = useGameStore.getState().currentPlayer
-    const yourName = useGameStore.getState().yourName
+    const { gameState, yourName } = useGameStore();
+    const currentPlayer = gameState.game.players[yourName];
+
+    if (!currentPlayer) {
+        return <div>Loading...</div>; // Render a loading state if player is undefined
+    }
 
     const developments = currentPlayer.developments.map((development) => gameState.cards[development]);
 

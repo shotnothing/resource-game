@@ -26,7 +26,17 @@ export function GetPlayerScore(player: Player, cards: Record<string, GameCard>) 
     return player.developments.reduce((acc, development) => acc + cards[development].score, 0)
 }
 
-export function GetPlayerDiscount(player: Player, cards: Record<string, GameCard>) {
+export function GetPlayerDiscount(player: Player | undefined, cards: Record<number, GameCard>): Record<string, number> {
+    if (!player) {
+        console.warn("Player is undefined");
+        return {
+            black: 0,
+            blue: 0,
+            green: 0,
+            red: 0,
+            white: 0,
+        };
+    }
     return player.developments.reduce((acc, development) => {
         const discountColor = cards[development].discount as keyof typeof acc;
         acc[discountColor] += 1;

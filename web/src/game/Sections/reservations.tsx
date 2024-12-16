@@ -14,8 +14,9 @@ import PurchaseButton from "@/game/Components/action-buttons/purchase-button"
 
 import { useGameStore } from "@/game/Store/game-store"
 import { useBoardSettingsStore } from "@/game/Store/board-settings-store"
+import { DoActionType } from "@/hooks/use-websocket"
 
-export function ReservationCard({ card, isPurchasable = true }: { card: GameCard, isPurchasable: boolean }) {
+export function ReservationCard({ card, isPurchasable = true, doAction }: { card: GameCard, isPurchasable: boolean, doAction: DoActionType }) {
     const gameState = useGameStore.getState().gameState
     const currentPlayerName = useGameStore.getState().yourName
     const currentPlayer = gameState.game.players[currentPlayerName]
@@ -40,7 +41,7 @@ export function ReservationCard({ card, isPurchasable = true }: { card: GameCard
             <div className="flex justify-between gap-1">
               <PriceDisplay price={viewDiscountedPrices ? priceAfterDiscount : card.price} />
   
-              {isPurchasable && <PurchaseButton card={card} player={currentPlayer} />}
+              {isPurchasable && <PurchaseButton card={card} player={currentPlayer} doAction={doAction} />}
             </div>
           </div>
         </CardContent>
@@ -49,35 +50,36 @@ export function ReservationCard({ card, isPurchasable = true }: { card: GameCard
   }
   
   
-  export default function ReservationsSection() {
-    const gameState = useGameStore.getState().gameState
-    const currentPlayerName = useGameStore.getState().yourName
-    const yourName = useGameStore.getState().yourName
+  export default function ReservationsSection({ doAction }: { doAction: DoActionType }) {
+    const { gameState, yourName } = useGameStore();
+    const currentPlayer = gameState.game.players[yourName];
 
-    const reservationsIndexes = gameState.game.players[currentPlayerName].reservations
-    const reservations = reservationsIndexes.map((index) => gameState.cards[index])
+    if (!currentPlayer) {
+        return <div>Loading...</div>; // Render a loading state if player is undefined
+    }
+
+    const reservationsIndexes = currentPlayer.reservations;
+    const reservations = reservationsIndexes.map((index) => gameState.cards[index]);
+
     return (
-      <Card>
-        <CardHeader className="py-5">
-  
-          <div className="flex flex-row justify-between  items-center">
-            <CardTitle className="flex items-center gap-2">
-              <Flag className="h-5 w-5 text-muted-foreground" />
-              Reservations
-              <div className="text-muted-foreground">({GetDisplayName(currentPlayerName, yourName)})</div>
-            </CardTitle>
-  
-            <div className="font-semibold text-muted-foreground">Maximum 3</div>
-          </div>
-  
-        </CardHeader>
-        <CardContent className="px-4">
-          <div className="space-y-3">
-            {reservations.map((reservation) => (
-              <ReservationCard key={reservation.id} card={reservation} isPurchasable={true} />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+        <Card>
+            <CardHeader className="py-5">
+                <div className="flex flex-row justify-between items-center">
+                    <CardTitle className="flex items-center gap-2">
+                        <Flag className="h-5 w-5 text-muted-foreground" />
+                        Reservations
+                        <div className="text-muted-foreground">({GetDisplayName(yourName, yourName)})</div>
+                    </CardTitle>
+                    <div className="font-semibold text-muted-foreground">Maximum 3</div>
+                </div>
+            </CardHeader>
+            <CardContent className="px-4">
+                <div className="space-y-3">
+                    {reservations.map((reservation) => (
+                        <ReservationCard key={reservation.id} card={reservation} isPurchasable={true} doAction={doAction} />
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
     )
   }

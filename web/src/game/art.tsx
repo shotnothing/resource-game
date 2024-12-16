@@ -1,5 +1,5 @@
 import { GameCard, Noble } from './types'
-import art from '@/art.json'
+import art from '@/resources/art.json'
 
 export function GetArtFromCard(card: GameCard) {
     return art[card.art as keyof typeof art]

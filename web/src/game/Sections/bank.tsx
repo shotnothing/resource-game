@@ -7,8 +7,9 @@ import { tokenColorScheme } from "@/game/constants"
 import Take2SameButton from "@/game/Components/action-buttons/take-2-same-button"
 import Take3DiffButton from "@/game/Components/action-buttons/take-3-diff-button"
 import { useGameStore } from "@/game/Store/game-store"
+import { DoActionType } from "@/hooks/use-websocket"
 
-export default function BankSection() {
+export default function BankSection({ doAction }: { doAction: DoActionType }) {
     const gameState = useGameStore.getState().gameState
     const tokens = [
         { name: 'White', amount: gameState.game.bank.white, max: 7 },
@@ -45,8 +46,8 @@ export default function BankSection() {
                 <Separator className="w-full my-2" />
 
                 <div className="flex flex-row gap-2">
-                    <Take2SameButton />
-                    <Take3DiffButton />
+                    <Take2SameButton doAction={doAction} />
+                    <Take3DiffButton doAction={doAction} />
                 </div>
 
             </CardContent>

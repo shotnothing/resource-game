@@ -17,7 +17,14 @@ import { Label } from "@/components/ui/label"
 import { GetTokenColorScheme } from "@/game/utils"
 import ActionMarker from "@/game/Components/action-buttons/action-marker"
 
-export default function Take3DiffButton() {
+import { useGameStore } from '@/game/Store/game-store'
+import { DoActionType } from '@/hooks/use-websocket'
+
+export default function Take3DiffButton({ doAction }: { doAction: DoActionType }) {
+    const { gameState, yourName } = useGameStore();
+    const player = gameState.game.players[yourName];
+
+    const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedColors, setSelectedColors] = useState<Record<string, boolean>>({
         white: false,
         black: false,
@@ -25,6 +32,10 @@ export default function Take3DiffButton() {
         green: false,
         blue: false,
     });
+
+    if (!player) {
+        return <div>Loading...</div>;
+    }
 
     const handleColorChange = (color: string) => {
         setSelectedColors(prev => {
@@ -39,13 +50,15 @@ export default function Take3DiffButton() {
 
     const selectedCount = Object.values(selectedColors).filter(Boolean).length;
 
+    const totalInPlayerWallet = Object.values(player.wallet).reduce((acc, curr) => acc + curr, 0)
+
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button className="w-full relative" variant="outline">
+                <Button className="w-full relative" variant="outline" disabled={totalInPlayerWallet >= 10}>
                     <ActionMarker />
                     Take 3 Diff.
-                    <BorderBeam size={50} duration={5} />
+                    {totalInPlayerWallet < 10 && <BorderBeam size={50} duration={5} />}
                 </Button>
             </DialogTrigger>
 
@@ -95,6 +108,12 @@ export default function Take3DiffButton() {
                         className="relative"
                         variant="outline"
                         disabled={selectedCount !== 3}
+                        onClick={() => {
+                            doAction('take_different', { 
+                                colors: Object.keys(selectedColors).filter(color => selectedColors[color]) 
+                            });
+                            setDialogOpen(false);
+                        }}
                     >
                         Commit Turn
                         <ActionMarker />

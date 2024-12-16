@@ -43,7 +43,6 @@ export function NobleCard({ noble }: { noble: Noble }) {
 
 export default function NoblesSection() {
     const gameState = useGameStore.getState().gameState
-    console.log(gameState)
     
     const nobles = gameState.game.collections_in_play.map((index) => {
         const noble = gameState.collections[index];

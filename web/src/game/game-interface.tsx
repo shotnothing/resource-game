@@ -8,10 +8,13 @@ import SettingsSection from "@/game/Sections/settings";
 import NoblesSection from "@/game/Sections/nobles";
 import ReservationsSection from "@/game/Sections/reservations";
 import DevelopmentsSection from "@/game/Sections/developments";
+import { useGameStore } from "./Store/game-store";
+import { DoActionType } from "@/hooks/use-websocket";
 
-export default function GameInterface() {
+export default function GameInterface({ doAction }: { doAction: DoActionType }) {
     const [focusedCard, setFocusedCard] = useState<number | null>(null)
-  
+    const { gameState } = useGameStore()
+
     return (
       <>
         <div
@@ -24,7 +27,7 @@ export default function GameInterface() {
           >
             {/* Top section */}
             <div className="flex flex-col h-full space-y-5">
-              <BankSection />
+              <BankSection doAction={doAction} />
               <div className="flex-grow">
                 <PlayersList />
               </div>
@@ -35,7 +38,7 @@ export default function GameInterface() {
           <div className="flex-1 flex-shrink-0 flex flex-col h-full">
   
             <div className="flex-grow no-select">
-              <CardGrid focusedCard={focusedCard} setFocusedCard={setFocusedCard} />
+              <CardGrid focusedCard={focusedCard} setFocusedCard={setFocusedCard} doAction={doAction} />
             </div>
   
             {/* Anchored at the bottom */}
@@ -55,7 +58,7 @@ export default function GameInterface() {
             onMouseDown={() => setFocusedCard(null)}
           >
             <NoblesSection />
-            <ReservationsSection />
+            <ReservationsSection doAction={doAction} />
             <div className="flex-1 overflow-hidden">
               <DevelopmentsSection />
             </div>

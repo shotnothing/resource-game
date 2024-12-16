@@ -7,9 +7,14 @@ import { GetDisplayName } from "@/game/utils"
 import { useGameStore } from "@/game/Store/game-store"
 
 export default function WalletSection() {
-    const currentPlayer = useGameStore.getState().currentPlayer
-    const yourName = useGameStore.getState().yourName
-    
+    const { gameState, yourName } = useGameStore();
+    const currentPlayer = gameState.game.players[yourName];
+
+    if (!currentPlayer) {
+         // Render a loading state
+        return <div>Loading...</div>;
+    }
+
     const tokens = [
         { name: 'White', amount: currentPlayer.wallet.white },
         { name: 'Black', amount: currentPlayer.wallet.black },

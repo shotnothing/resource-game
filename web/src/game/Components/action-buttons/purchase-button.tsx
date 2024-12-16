@@ -29,8 +29,9 @@ import MiniTokenDisplay from "@/game/Components/mini-token-display"
 import GoldTokenSelector from "@/game/Components/gold-token-selector"
 import RainbowText from "@/game/Components/rainbow-text"
 import { useGameStore } from "@/game/Store/game-store"
+import { DoActionType } from '@/hooks/use-websocket'
 
-export default function PurchaseButton({ card, player }: { card: GameCard, player: Player }) {
+export default function PurchaseButton({ card, player, doAction }: { card: GameCard, player: Player, doAction: DoActionType }) {
     const [goldTokenUsage, setGoldTokenUsage] = useState({
         white: 0,
         black: 0,
@@ -39,7 +40,13 @@ export default function PurchaseButton({ card, player }: { card: GameCard, playe
         blue: 0,
     })
 
+    const [dialogOpen, setDialogOpen] = useState(false);
     const gameState = useGameStore.getState().gameState
+
+    if (!player) {
+        return <div>Loading...</div>;
+    }
+
     const cards = gameState.cards
 
     const discount = GetPlayerDiscount(player, cards)
@@ -51,7 +58,7 @@ export default function PurchaseButton({ card, player }: { card: GameCard, playe
     const priceAfterGoldTokens = ApplyGoldTokens(priceAfterDiscount, goldTokenUsage)
 
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
                 <Button
                     className={`px-2 h-8 ml-3 relative w-11/12`}
@@ -127,7 +134,24 @@ export default function PurchaseButton({ card, player }: { card: GameCard, playe
 
 
                 <DialogFooter>
-                    <Button type="submit" className="relative" variant="outline">
+                    <Button type="submit" 
+                        className="relative" 
+                        variant="outline"
+                        onClick={() => {
+                            
+                            // Convert goldTokenUsage to a list of colors
+                            // e.g. { white: 1, black: 2 } -> [white, black, black]
+                            const goldUsage = Object.entries(goldTokenUsage)
+                                .filter(([_, amount]) => amount > 0)
+                                .flatMap(([color, amount]) => Array(amount).fill(color));
+
+                            doAction('purchase', {
+                                card_id: card.id,
+                                gold_usage: goldUsage
+                            });
+                            setDialogOpen(false);
+                        }}
+                    >
                         Commit Turn
                         <ActionMarker />
                         <BorderBeam size={50} duration={5} />

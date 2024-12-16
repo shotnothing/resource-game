@@ -17,17 +17,33 @@ import { Label } from "@/components/ui/label"
 import { GetTokenColorScheme } from "@/game/utils"
 import ActionMarker from "@/game/Components/action-buttons/action-marker"
 
-export default function Take2SameButton() {
+import { useGameStore } from '@/game/Store/game-store'
+import { DoActionType } from '@/hooks/use-websocket'
+import { Wallet } from "@/game/types"
+
+export default function Take2SameButton({ doAction }: { doAction: DoActionType }) {
+    const { gameState, yourName } = useGameStore();
+    const player = gameState.game.players[yourName];
+
+    const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedColor, setSelectedColor] = useState<string | null>(null)
-    const colors = ['white', 'black', 'red', 'green', 'blue']
+
+    if (!player) {
+        return <div>Loading...</div>;
+    }
+
+    
+    const colors: Array<keyof Wallet> = ['white', 'black', 'red', 'green', 'blue']
+    const totalInPlayerWallet = Object.values(player.wallet).reduce((acc, curr) => acc + curr, 0)
+
 
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button className="w-full relative" variant="outline">
+                <Button className="w-full relative" variant="outline" disabled={totalInPlayerWallet >= 10}>
                     <ActionMarker />
                     Take 2 Same
-                    <BorderBeam size={50} duration={5} />
+                    {totalInPlayerWallet < 10 && <BorderBeam size={50} duration={5} />}
                 </Button>
             </DialogTrigger>
 
@@ -54,12 +70,15 @@ export default function Take2SameButton() {
                                     selectedColor == color ? setSelectedColor(null) : setSelectedColor(color)
                                 }}
                                 className={`
-                    flex items-center justify-center
-                    data-[state=checked]:
-                    ${GetTokenColorScheme(color).verylight}
-                    ${GetTokenColorScheme(color).border}
-                    ${GetTokenColorScheme(color).text}
-                  `}
+                                    flex items-center justify-center
+                                    data-[state=checked]:
+                                    ${GetTokenColorScheme(color).verylight}
+                                    ${GetTokenColorScheme(color).border}
+                                    ${GetTokenColorScheme(color).text}
+                                `}
+                                disabled={
+                                    gameState.game.bank[color] < 4
+                                }
                             />
                             <Label
                                 htmlFor={color}
@@ -77,6 +96,10 @@ export default function Take2SameButton() {
                         className="relative"
                         variant="outline"
                         disabled={selectedColor == null}
+                        onClick={() => {
+                            doAction('take_same', { color: selectedColor });
+                            setDialogOpen(false);
+                        }}
                     >
                         Commit Turn
                         <ActionMarker />
