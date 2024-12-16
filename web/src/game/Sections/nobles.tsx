@@ -6,11 +6,17 @@ import { useGameStore } from "../Store/game-store"
 import { PersonStanding } from "lucide-react"
 import { GetArtFromNoble } from "../art"
 
-export function NobleCard({ noble }: { noble: Noble }) {
+export function NobleCard({ noble, owner }: { noble: Noble, owner: string | undefined }) {
     const art = GetArtFromNoble(noble)
     return (
         <Card className="hover:scale-105 transition-all">
             <CardContent className="flex flex-col items-center justify-center py-2 px-2">
+                {owner && (
+                    <div className="flex flex-col items-center justify-center">
+                        <div className="text-xs text-red-500 font-bold">Owned by:</div>
+                        <div className="text-xs text-red-500">{owner.slice(0, 10) + (owner.length > 10 ? '...' : '')}</div>
+                    </div>
+                )}
 
                 <div className="flex flex-col gap-3">
 
@@ -57,6 +63,12 @@ export default function NoblesSection() {
         return { ...noble, trigger: completeTrigger };
     });
 
+    // Go from 0 .. nobles.length and check if any players has attained_collection
+    // e.g. {0: 'Diana', 1: null, 2: 'Bob', 3: null}
+    const nobleOwnership = nobles.map((_, index) => {
+        return Object.entries(gameState.game.players).find(([_, player]) => player.attained_collection == index)?.[0]
+    })
+
     return (
         <Card>
             <CardHeader className="py-5">
@@ -68,7 +80,7 @@ export default function NoblesSection() {
             <CardContent>
                 <div className="grid grid-cols-5 gap-2">
                     {nobles.map((noble) => (
-                        <NobleCard key={noble.art} noble={noble} />
+                        <NobleCard key={noble.art} noble={noble} owner={nobleOwnership[nobles.indexOf(noble)]} />
                     ))}
                 </div>
             </CardContent>
