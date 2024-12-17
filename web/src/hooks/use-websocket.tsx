@@ -37,8 +37,8 @@ export function useWebSocket(url: string = 'ws://game-server.jwen.cc/ws') {
       setHasConnected(true);
 
       viewRoom()
-      setRoomName(roomName)
-      setYourName(yourName)
+      setRoomName(roomName || '')
+      setYourName(yourName || '')
     };
 
     socket.onmessage = (event) => {

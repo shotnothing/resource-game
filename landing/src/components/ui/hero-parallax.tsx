@@ -41,7 +41,6 @@ export const ProductCard = ({
 }: {
   product: {
     title: string;
-    link: string;
     thumbnail: string;
   };
 }) => {

@@ -2,6 +2,8 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useToast } from '@/hooks/use-toast'
 
+import { GameState } from '@/../../web/src/game/types'
+
 type ServerMessage = {
   type: string;
   message?: string;
