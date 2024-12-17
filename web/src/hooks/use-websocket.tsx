@@ -21,7 +21,7 @@ export type DoActionType = (
   action_args: Record<string, any>
 ) => void
 
-export function useWebSocket(url: string = 'ws://game-server.jwen.cc/ws') {
+export function useWebSocket(url: string = 'wss://game-server.jwen.cc/ws') {
   const socketRef = useRef<WebSocket | null>(null);
   const [hasConnected, setHasConnected] = useState(false);
   const { roomName, yourName } = useParams();
