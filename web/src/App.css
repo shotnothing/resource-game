@@ -56,11 +56,11 @@
   0%, 100% {
     transform: scale(1);
     opacity: 1;
-    color: hsl(0, 0%, 0%);
+    color: hsl(242.2 47.4% 34.3%);
   }
   50% {
-    transform: scale(1.2);
+    transform: scale(1.1);
     opacity: 1;
-    color: #fdba00;
+    color: hsl(243.4, 75.4%, 58.6%);
   }
 }

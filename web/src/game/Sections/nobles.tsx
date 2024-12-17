@@ -11,13 +11,6 @@ export function NobleCard({ noble, owner }: { noble: Noble, owner: string | unde
     return (
         <Card className="hover:scale-105 transition-all">
             <CardContent className="flex flex-col items-center justify-center py-2 px-2">
-                {owner && (
-                    <div className="flex flex-col items-center justify-center">
-                        <div className="text-xs text-red-500 font-bold">Owned by:</div>
-                        <div className="text-xs text-red-500">{owner.slice(0, 10) + (owner.length > 10 ? '...' : '')}</div>
-                    </div>
-                )}
-
                 <div className="flex flex-col gap-3">
 
                     <div className="flex flex-col items-center">
@@ -25,8 +18,14 @@ export function NobleCard({ noble, owner }: { noble: Noble, owner: string | unde
                         <div className="text-5xl text-muted-foreground">{art.icon}</div>
                     </div>
 
+                    {owner && (
+                        <div className="flex flex-col items-center justify-center">
+                            <div className="text-xs text-red-500 font-bold">Owned by:</div>
+                            <div className="text-xs text-red-500">{owner.slice(0, 10) + (owner.length > 10 ? '...' : '')}</div>
+                        </div>
+                    )}
                     <div className="grid grid-cols-2 items-center justify-center gap-1 no-select">
-                        {GetOrderedPrice(noble.trigger).map(([color, amount]) => (
+                        {!owner && GetOrderedPrice(noble.trigger).map(([color, amount]) => (
                             amount > 0 && (
                                 <Badge
                                     key={color}
@@ -49,7 +48,7 @@ export function NobleCard({ noble, owner }: { noble: Noble, owner: string | unde
 
 export default function NoblesSection() {
     const gameState = useGameStore.getState().gameState
-    
+
     const nobles = gameState.game.collections_in_play.map((index) => {
         const noble = gameState.collections[index];
         // Ensure all keys are present in the trigger

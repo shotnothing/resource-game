@@ -20,7 +20,7 @@ export function PlayerCard({ player, isTurn = false }: { player: Player, isTurn:
   const reservations = player.reservations.map((index) => gameState.cards[index])
 
   return (
-    <Card className={cn("transition-colors hover:bg-muted/50", isTurn && "border-yellow-500 border-2")}>
+    <Card className={cn("transition-colors hover:bg-muted/50", isTurn && "bg-indigo-100 border-indigo-200")}>
       <CardContent className="p-2">
         <div className="flex items-center gap-3">
           <div className="rounded-full bg-muted p-2">

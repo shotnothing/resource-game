@@ -100,9 +100,11 @@ export default function DevelopmentsSection() {
 
                 <ScrollArea className="flex-1">
                     <div className="space-y-3 pr-4">
-                        {developments.reverse().map((development) => (
-                            <DevelopmentCard key={development.id} card={development} />
-                        ))}
+                        {developments.length > 0
+                            ? developments.reverse().map((development) => (
+                                    <DevelopmentCard key={development.id} card={development} />
+                                ))
+                            : <div className="text-muted-foreground text-center">No developments</div>}
                     </div>
                 </ScrollArea>
             </CardContent>
