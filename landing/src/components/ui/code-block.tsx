@@ -1,5 +1,7 @@
 "use client";
 import React from "react";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 
 type CodeBlockProps = {
@@ -82,6 +84,30 @@ export const CodeBlock = ({
           </div>
         )}
       </div>
+      <SyntaxHighlighter
+        language={activeLanguage}
+        style={atomDark}
+        customStyle={{
+          margin: 0,
+          padding: 0,
+          background: "transparent",
+          fontSize: "0.875rem", // text-sm equivalent
+        }}
+        wrapLines={true}
+        showLineNumbers={false}
+        lineProps={(lineNumber) => ({
+          style: {
+            backgroundColor: activeHighlightLines.includes(lineNumber)
+              ? "rgba(255,255,255,0.1)"
+              : "transparent",
+            display: "block",
+            width: "100%",
+          },
+        })}
+        PreTag="div"
+      >
+        {String(activeCode)}
+      </SyntaxHighlighter>
     </div>
   );
 };
