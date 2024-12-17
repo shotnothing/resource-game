@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import { GameState, Player, Noble } from '@/game/types'
 
 import defaultGameState from '@/resources/temp.json'
-const defaultCurrentPlayerName = "Alice";
 const defaultYourName = "Alice"
 const defaultRoomName = "testRoom"
 

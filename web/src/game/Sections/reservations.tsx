@@ -16,7 +16,7 @@ import { useGameStore } from "@/game/Store/game-store"
 import { useBoardSettingsStore } from "@/game/Store/board-settings-store"
 import { DoActionType } from "@/hooks/use-websocket"
 
-export function ReservationCard({ card, isPurchasable = true, doAction }: { card: GameCard, isPurchasable: boolean, doAction: DoActionType }) {
+export function ReservationCard({ card, isPurchasable = true, doAction = null }: { card: GameCard, isPurchasable: boolean, doAction: DoActionType | null }) {
   const gameState = useGameStore.getState().gameState
   const currentPlayerName = useGameStore.getState().yourName
   const currentPlayer = gameState.game.players[currentPlayerName]

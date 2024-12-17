@@ -11,7 +11,7 @@ export default function MiniHoverReservationCard({ card }: { card: GameCard }) {
         </HoverCardTrigger>
         <HoverCardContent className="w-full p-0">
           <div className="w-full">
-            <ReservationCard card={card} isPurchasable={false} />
+            <ReservationCard card={card} isPurchasable={false} doAction={null} />
           </div>
         </HoverCardContent>
       </HoverCard>
