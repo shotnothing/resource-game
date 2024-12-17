@@ -7,7 +7,7 @@ function Error404Page() {
     <>
       <div className="relative flex h-screen w-screen flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
 
-        <Card>
+        <Card className="z-10">
           <CardHeader>
             <CardTitle>404</CardTitle>
             <CardDescription>Page not found</CardDescription>
