@@ -3,6 +3,8 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 import { useGameStore } from '@/game/Store/game-store';
 import { GameState } from '@/game/types';
 import { useParams } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import Art from '@/resources/art.json';
 
 type ServerMessage = {
   type: string;
@@ -15,7 +17,7 @@ type ServerMessage = {
 };
 
 export type DoActionType = (
-  action: string, 
+  action: string,
   action_args: Record<string, any>
 ) => void
 
@@ -24,6 +26,7 @@ export function useWebSocket(url: string = 'ws://localhost:8000/ws') {
   const [hasConnected, setHasConnected] = useState(false);
   const { roomName, yourName } = useParams();
   const { gameState, setGameState, setRoomName, setYourName } = useGameStore();
+  const { toast } = useToast();
 
   useEffect(() => {
     const socket = new WebSocket(url);
@@ -43,7 +46,7 @@ export function useWebSocket(url: string = 'ws://localhost:8000/ws') {
         const data: ServerMessage = JSON.parse(event.data);
 
         console.log("Received message", data);
-        
+
         switch (data.type) {
           case 'game_state_update':
             setGameState({
@@ -57,14 +60,53 @@ export function useWebSocket(url: string = 'ws://localhost:8000/ws') {
 
           case 'notification':
             console.log('Notification:', data.message);
+
+            switch (data.action) {
+              case 'take_same':
+                toast({
+                  title: `${data.username} took 2 ${data.action_args.color} tokens`,
+                  variant: "default",
+                });
+                break;
+              case 'take_different':
+                toast({
+                  title: `${data.username} took ${data.action_args.colors.join(', ')} tokens`,
+                  variant: "default",
+                });
+                break;
+              case 'reserve':
+                toast({
+                  title: `${data.username} reserved ${Art[gameState.cards[data.action_args.card_id].art as keyof typeof Art].icon
+                    }${Art[gameState.cards[data.action_args.card_id].art as keyof typeof Art].name
+                    } (${gameState.cards[data.action_args.card_id].score})`,
+                  variant: "default",
+                });
+                break;
+              case 'purchase':
+                toast({
+                  title: `${data.username} purchased ${Art[gameState.cards[data.action_args.card_id].art as keyof typeof Art].icon
+                    }${Art[gameState.cards[data.action_args.card_id].art as keyof typeof Art].name
+                    } (${gameState.cards[data.action_args.card_id].score})`,
+                  variant: "default",
+                });
+                break;
+            }
             break;
 
           case 'error':
             console.error('Error:', data.message || data.error);
+            toast({
+              title: data.message || data.error,
+              variant: "destructive",
+            });
             break;
 
           case 'info':
             console.log('Info:', data.message);
+            toast({
+              title: data.message,
+              variant: "default",
+            });
             break;
 
           default:

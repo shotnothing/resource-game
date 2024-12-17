@@ -71,7 +71,8 @@ export default function Take2SameButton({ doAction }: { doAction: DoActionType }
                                 }}
                                 className={`
                                     flex items-center justify-center
-                                    data-[state=checked]:
+                                    data-[state=checked]:bg-muted-foreground
+                                    p-4
                                     ${GetTokenColorScheme(color).verylight}
                                     ${GetTokenColorScheme(color).border}
                                     ${GetTokenColorScheme(color).text}

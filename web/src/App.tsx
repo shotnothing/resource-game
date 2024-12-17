@@ -3,6 +3,7 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom'
 import Room from '@/game/Components/room'
 import { useGameStore } from '@/game/Store/game-store'
+import { Toaster } from '@/components/ui/toaster'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/:roomName/*" element={<div>User not provided</div>} />
         <Route path="*" element={<div>URL Format Not Understood</div>} />
       </Routes>
+      <Toaster />
     </Router>
   )
 }

@@ -223,7 +223,10 @@ async def websocket_endpoint(websocket: WebSocket):
 
             await manager.broadcast_json(room_name, {
                 "type": "notification",
-                "message": f"{username} took action {action}"
+                "message": f"{username} took action {action}",
+                "username": username,
+                "action": action,
+                "action_args": action_args
             })
             
             await manager.broadcast_json(room_name, {

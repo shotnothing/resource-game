@@ -86,7 +86,8 @@ export default function Take3DiffButton({ doAction }: { doAction: DoActionType }
                                 disabled={!isSelected && selectedCount >= 3}
                                 className={`
                     flex items-center justify-center
-                    data-[state=checked]:
+                    data-[state=checked]:bg-muted-foreground
+                    p-4
                     ${GetTokenColorScheme(color).verylight}
                     ${GetTokenColorScheme(color).border}
                     ${GetTokenColorScheme(color).text}

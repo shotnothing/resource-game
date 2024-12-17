@@ -1,5 +1,6 @@
 // use-websocket.tsx
 import { useEffect, useRef, useCallback, useState } from 'react';
+import { useToast } from '@/hooks/use-toast'
 
 type ServerMessage = {
   type: string;
@@ -20,6 +21,7 @@ export type DoActionType = (
 export function useWebSocket(url: string = 'ws://localhost:8000/ws') {
   const socketRef = useRef<WebSocket | null>(null);
   const [hasConnected, setHasConnected] = useState(false);
+  const { toast } = useToast()
 
   useEffect(() => {
     const socket = new WebSocket(url);
@@ -43,14 +45,26 @@ export function useWebSocket(url: string = 'ws://localhost:8000/ws') {
 
           case 'notification':
             console.log('Notification:', data.message);
+            toast({
+              title: data.message,
+              variant: 'default',
+            })
             break;
 
           case 'error':
             console.error('Error:', data.message || data.error);
+            toast({
+              title: data.message || data.error,
+              variant: 'destructive',
+            })
             break;
 
           case 'info':
             console.log('Info:', data.message);
+            toast({
+              title: data.message,
+              variant: 'default',
+            })
             break;
 
           default:
