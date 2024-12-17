@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { useGameStore } from "@/game/Store/game-store"
 import { cn } from "@/lib/utils"
@@ -5,7 +6,7 @@ import { GameCard as GameCardType } from "@/game/types"
 import { IsFree, GetOrderedPrice, GetPlayerDiscount, GetPriceAfterDiscount, GetTokenColorScheme } from "@/game/utils"
 import { Trophy, Gem } from "lucide-react"
 import PurchaseButton from "@/game/Components/action-buttons/purchase-button"
-import ReserveButton from "@/game/Components/action-buttons/reserve-button"
+import ReserveButton, { ReserveTierButton } from "@/game/Components/action-buttons/reserve-button"
 import RainbowText from "@/game/Components/rainbow-text"
 import { Badge } from "@/components/ui/badge"
 import { useBoardSettingsStore } from "@/game/Store/board-settings-store"
@@ -23,16 +24,29 @@ export function DeckCard({
     onClick?: () => void
 }) {
     const gameState = useGameStore.getState().gameState
+    const [isHovered, setIsHovered] = useState(false)
     return (
         <Card
             className="bg-gradient-to-br from-primary/10 to-primary/5 border-r-4 border-b-4 border-t-0 border-l-0 border-muted-foreground/25"
             onClick={onClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
-            <CardContent className="flex aspect-[3/4] items-center justify-center p-6">
+            <CardContent className="flex flex-col items-center justify-between h-full p-6">
+                <div className="flex-1" />
                 <div className="text-center">
                     <div className="text-lg font-semibold">Tier {tier}</div>
-                    <div className="text-sm text-muted-foreground">Cards Left: {gameState.game.decks[tier as keyof typeof gameState.game.decks].hidden_count}</div>
+                    <div className="text-sm text-muted-foreground">
+                        Cards Left: {gameState.game.decks[tier as keyof typeof gameState.game.decks].hidden_count}
+                    </div>
                 </div>
+                
+                <div className="flex-1 w-full">
+                    {isHovered && <div className="items-center justify-center w-full mt-4">
+                        <ReserveTierButton tier={tier} doAction={doAction} />
+                    </div>}
+                </div>
+                
             </CardContent>
         </Card>
     );
@@ -49,10 +63,11 @@ export function GameCard({
     isFocused?: boolean,
     setFocused: (card: number) => void,
 }) {
+    const [isHovered, setIsHovered] = useState(false);
+
     const { gameState, yourName } = useGameStore();
     const currentPlayer = gameState.game.players[yourName];
-
-    const { viewDiscountedPrices } = useBoardSettingsStore()
+    const { viewDiscountedPrices } = useBoardSettingsStore();
 
     if (!currentPlayer) {
         return <div>Loading...</div>;
@@ -65,6 +80,11 @@ export function GameCard({
         <Card
             className={cn("transition-all hover:scale-105 shadow-lg", isFocused && "scale-105 shadow-indigo-500/50")}
             onClick={() => setFocused(card.id)}
+
+            // Switch cursor to pointer when hovered
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{ cursor: isHovered ? 'pointer' : 'default' }}
         >
             <CardContent className="flex flex-col aspect-[3/4] p-4 py-3">
                 <div className="flex items-start gap-2">
