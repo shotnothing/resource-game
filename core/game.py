@@ -288,7 +288,7 @@ class Game:
             Game: The initialized game state.
         '''
         if self.began:
-            return self
+            raise ActionInvalidException("Game has already begun")
         
         if len(self.players) < 1:
             raise ActionInvalidException("Must have at least 1 player")
@@ -407,7 +407,7 @@ class Game:
     
     @action
     def action_reserve(self, player_id: str, tier: str, card_id: int | None) -> "Game":
-        ''' Reserve 1 development card and take 1 gold token. 
+        ''' Reserve 1 development card and take 1 gold token (if available). 
         
         If card_id is None, the player will choose the topmost hidden card of
         the chosen tier. Players may not have more than three reserved cards in

@@ -183,7 +183,7 @@ function CreateGameCard({
                     ? `No Room Name`
                     : !user
                       ? `No Username`
-                      : `http://localhost:5173/${room}/${user}`
+                      : `https://game.jwen.cc/${room}/${user}`
                 }
                 language="text"
                 filename={`Player ${index + 1}`}
@@ -199,7 +199,7 @@ function CreateGameCard({
                       ? `No Room Name`
                       : !user
                         ? `No Username`
-                        : `http://localhost:5173/${room}/${user}`,
+                        : `https://game.jwen.cc/${room}/${user}`,
                     '_blank'
                   )
                 }}

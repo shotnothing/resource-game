@@ -5,6 +5,7 @@ import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-w
 import gameplay1 from "@/resources/gameplay1.png"
 import { FlipWords } from "@/components/ui/flip-words";
 import BoxReveal from "@/components/ui/box-reveal";
+import { useNavigate } from "react-router-dom";
 
 const products = [
     {
@@ -19,7 +20,7 @@ const products = [
     },
 ]
 
-const LandingButton = ({ text, className }: { text: string, className?: string }) => {
+const LandingButton = ({ text, className, onClick }: { text: string, className?: string, onClick?: () => void }) => {
     return (
         <Button
             className={`
@@ -31,11 +32,14 @@ const LandingButton = ({ text, className }: { text: string, className?: string }
             w-full
             ${className}
             `}
+            onClick={onClick}
         >{text}</Button>
     )
 }
 
 export const Header = () => {
+    const navigate = useNavigate();
+
     const words = [
         "frictionless", "convenient", "easy", "fun", "ergonomic",
         "real-time", "relaxing", "snappy", "seamless",
@@ -68,7 +72,9 @@ export const Header = () => {
 
             <BoxReveal boxColor={"#5046e6"} duration={0.5}>
                 <div className="flex flex-col items-start justify-center gap-4 mt-4 mb-4 mr-4">
-                    <LandingButton className="" text="Create Game" />
+                    <LandingButton className="" text="Create Game" onClick={() => {
+                        navigate('/lobby')
+                    }} />
                     <div className="flex flex-row items-center justify-center gap-4">
                         <LandingButton className="" text="Tutorial" />
                         <LandingButton className="" text="Card Gallery" />
